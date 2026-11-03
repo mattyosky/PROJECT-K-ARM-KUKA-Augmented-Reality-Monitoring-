@@ -1,4 +1,4 @@
-# Spatial Augmented Reality Digital Twin for a KUKA LBR Med Collaborative Robot
+# Spatial Augmented Reality Digital Twin for a KUKA LBR Med 14 R820 Collaborative Robot
 
 > **Bachelor's Degree Thesis Project**  
 > *Development of an Augmented Reality Environment for Data Extraction from a Robotic Device for Medical Rehabilitation*
