@@ -1,0 +1,104 @@
+# ==========================================================
+# 1. UNITY 3D & META QUEST (Android Build & Cache)
+# ==========================================================
+
+# Unity auto-generated folders (excluded across all subdirectories)
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+[Aa]ssets/AssetStoreTools*
+
+# Android / Meta Quest compiled packages and executables
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# Auto-generated IDE project and solution files (Visual Studio / Rider / VS Code)
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity meta files for ignored files
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Crashlytics and system reports
+sysinfo.txt
+crashlytics-build.properties
+
+# ==========================================================
+# 2. PYTHON (Gateway PC - UDP Middleware Script)
+# ==========================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Distribution and logs
+*.egg-info/
+.installed.cfg
+*.egg
+*.log
+
+# ==========================================================
+# 3. JAVA / KUKA SUNRISE WORKBENCH (Eclipse-based)
+# ==========================================================
+
+*.class
+bin/
+target/
+.metadata/
+.mtj.tmp/
+*.ctxt
+
+# Packaged archives (uncomment *.jar if you do not store local third-party libraries)
+# *.jar
+*.war
+*.nar
+*.ear
+
+# ==========================================================
+# 4. IDEs & OPERATING SYSTEM (Windows / macOS / Linux)
+# ==========================================================
+
+.vs/
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS-generated files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+.AppleDouble
+.LSOverride

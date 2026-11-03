@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="400" viewBox="0 0 1000 400" font-family="Latin Modern Roman, DejaVu Serif, serif" xmlns:c2pa="http://c2pa.org/manifest">
+  <defs>
+    <marker id="aX" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+      <path d="M0,0 L8,3.2 L0,6.4 z" fill="#FF7064"/></marker>
+    <marker id="aY" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+      <path d="M0,0 L8,3.2 L0,6.4 z" fill="#5BE08D"/></marker>
+    <marker id="aZ" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+      <path d="M0,0 L8,3.2 L0,6.4 z" fill="#5DB8FF"/></marker>
+    <marker id="aG" markerWidth="8" markerHeight="8" refX="6.8" refY="2.8" orient="auto">
+      <path d="M0,0 L7,2.8 L0,5.6 z" fill="#C3C8CE"/></marker>
+    <marker id="aMap" markerWidth="10" markerHeight="10" refX="8.5" refY="3.5" orient="auto">
+      <path d="M0,0 L9,3.5 L0,7 z" fill="#E3E5E8"/></marker>
+  </defs>
+
+  
+
+  <!-- ===== PANNELLO KUKA ===== -->
+  <rect x="30" y="20" width="430" height="365" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.45" stroke-width="1" rx="4"/>
+  <text x="245" y="50" text-anchor="middle" font-size="18" font-weight="bold" fill="#FFFFFF">KUKA — Robot Base Coordinate System</text>
+  <text x="245" y="73" text-anchor="middle" font-size="14.5" fill="#E3E5E8">terna destrorsa · verticale = Z · coordinate in mm</text>
+
+  <path d="M245,258 L160,307 L245,356 L330,307 z" fill="#ffffff" fill-opacity="0.12" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1"/>
+  <line x1="245" y1="258" x2="349" y2="318" stroke="#FF7064" stroke-width="2.6" marker-end="url(#aX)"/>
+  <line x1="245" y1="258" x2="141" y2="318" stroke="#5BE08D" stroke-width="2.6" marker-end="url(#aY)"/>
+  <line x1="245" y1="258" x2="245" y2="138" stroke="#5DB8FF" stroke-width="2.6" marker-end="url(#aZ)"/>
+  <circle cx="245" cy="258" r="3.6" fill="#FFFFFF"/>
+
+  <text x="366" y="325" font-size="17" font-weight="bold" fill="#FF7064">X<tspan font-size="11" dy="4">k</tspan></text>
+  <text x="352" y="344" font-size="13" fill="#FFB3AB">avanti</text>
+  <text x="110" y="325" font-size="17" font-weight="bold" fill="#5BE08D">Y<tspan font-size="11" dy="4">k</tspan></text>
+  <text x="82"  y="344" font-size="13" fill="#A8EDC2">sinistra</text>
+  <text x="257" y="136" font-size="17" font-weight="bold" fill="#5DB8FF">Z<tspan font-size="11" dy="4">k</tspan></text>
+  <text x="257" y="155" font-size="13" fill="#A9D8FF">alto</text>
+  <text x="245" y="377" text-anchor="middle" font-size="12.5" fill="#C9CDD2">origine alla base del manipolatore</text>
+
+  <!-- ===== PANNELLO UNITY ===== -->
+  <rect x="540" y="20" width="430" height="365" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.45" stroke-width="1" rx="4"/>
+  <text x="755" y="50" text-anchor="middle" font-size="18" font-weight="bold" fill="#FFFFFF">Unity — spazio locale del RobotRoot</text>
+  <text x="755" y="73" text-anchor="middle" font-size="14.5" fill="#E3E5E8">terna sinistrorsa · verticale = Y · coordinate in m</text>
+
+  <path d="M755,258 L670,307 L755,356 L840,307 z" fill="#ffffff" fill-opacity="0.12" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1"/>
+
+  <!-- direzioni in cui ricadono gli assi KUKA (tratteggiate) -->
+  <line x1="755" y1="258" x2="660" y2="203" stroke="#C3C8CE" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#aG)"/>
+  <line x1="755" y1="258" x2="850" y2="203" stroke="#C3C8CE" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#aG)"/>
+  <text x="620" y="196" font-size="14" fill="#D0D4D9">X<tspan font-size="10" dy="3">k</tspan></text>
+  <text x="856" y="196" font-size="14" fill="#D0D4D9">Y<tspan font-size="10" dy="3">k</tspan></text>
+
+  <line x1="755" y1="258" x2="859" y2="318" stroke="#FF7064" stroke-width="2.6" marker-end="url(#aX)"/>
+  <line x1="755" y1="258" x2="651" y2="318" stroke="#5DB8FF" stroke-width="2.6" marker-end="url(#aZ)"/>
+  <line x1="755" y1="258" x2="755" y2="138" stroke="#5BE08D" stroke-width="2.6" marker-end="url(#aY)"/>
+  <circle cx="755" cy="258" r="3.6" fill="#FFFFFF"/>
+
+  <text x="876" y="325" font-size="17" font-weight="bold" fill="#FF7064">X<tspan font-size="11" dy="4">u</tspan></text>
+  <text x="866" y="344" font-size="13" fill="#FFB3AB">destra</text>
+  <text x="620" y="325" font-size="17" font-weight="bold" fill="#5DB8FF">Z<tspan font-size="11" dy="4">u</tspan></text>
+  <text x="592" y="344" font-size="13" fill="#A9D8FF">profondità</text>
+  <text x="767" y="136" font-size="17" font-weight="bold" fill="#5BE08D">Y<tspan font-size="11" dy="4">u</tspan></text>
+  <text x="767" y="155" font-size="13" fill="#A8EDC2">alto  =  Z<tspan font-size="10" dy="3">k</tspan></text>
+  <text x="755" y="377" text-anchor="middle" font-size="12.5" fill="#C9CDD2">origine stabilita dalla calibrazione sul marker</text>
+
+  <line x1="470" y1="215" x2="530" y2="215" stroke="#FFFFFF" stroke-width="2" marker-end="url(#aMap)"/>
+  <text x="498" y="203" text-anchor="middle" font-size="16" font-style="italic" fill="#FFFFFF">S</text>
+
+  </svg>

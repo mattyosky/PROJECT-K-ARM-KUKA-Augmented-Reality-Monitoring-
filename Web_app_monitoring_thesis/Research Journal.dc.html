@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Unbounded:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+  html, body { margin:0; padding:0; background:#0a0a10; color:#e8e8f0; font-family:'Space Grotesk',sans-serif; }
+  * { box-sizing:border-box; }
+  a { color:var(--achi, #67E8F9); text-decoration:none; }
+  a:hover { color:#a5f3fc; text-decoration:underline; }
+  ::-webkit-scrollbar { width:10px; height:10px; }
+  ::-webkit-scrollbar-track { background:#0a0a10; }
+  ::-webkit-scrollbar-thumb { background:#26263a; border-radius:5px; }
+  ::-webkit-scrollbar-thumb:hover { background:#34344e; }
+  input, textarea, select, button { font-family:'Space Grotesk',sans-serif; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes glowPulse { 0%,100% { opacity:0.55; } 50% { opacity:1; } }
+  @keyframes floaty { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-12px); } }
+  @keyframes recBlink { 0%,100% { opacity:1; } 50% { opacity:0.25; } }
+  @media print {
+    body * { visibility:hidden; }
+    #print-area, #print-area * { visibility:visible; }
+    #print-area { position:absolute; left:0; top:0; width:100%; background:#ffffff !important; box-shadow:none !important; border-radius:0 !important; }
+  }
+  .katex { font-size:1.05em; }
+  #print-area .katex { color:#16161e; }
+</style>
+</helmet>
+
+<div style="display:flex; flex-direction:row; min-height:100vh; background:radial-gradient(1200px 700px at 80% -10%, rgba(var(--ac-rgb, 34,211,238),0.07), transparent 60%), radial-gradient(900px 600px at 0% 100%, rgba(167,139,250,0.06), transparent 60%), #0a0a10; --ac: {{ themeAc }}; --ac2: {{ themeAc2 }}; --achi: {{ themeHi }}; --ac-rgb: {{ themeRgb }};">
+
+  <!-- ============ SIDEBAR (desktop) ============ -->
+  <sc-if value="{{ notMobile }}" hint-placeholder-val="{{ true }}">
+    <div style="width:230px; flex-shrink:0; display:flex; flex-direction:column; gap:8px; padding:28px 18px; border-right:1px solid rgba(255,255,255,0.06); position:sticky; top:0; height:100vh;">
+      <div style="display:flex; align-items:center; gap:12px; padding:0 10px 22px 10px;">
+        <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(var(--ac-rgb, 34,211,238),0.25), rgba(167,139,250,0.25)); border:1px solid rgba(var(--ac-rgb, 34,211,238),0.4); display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:500; color:var(--achi, #67E8F9);">RJ</div>
+        <div>
+          <div style="font-weight:700; font-size:15px; letter-spacing:0.02em;">Diario di Ricerca</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#6b6b85; letter-spacing:0.08em;">AR · QUEST 3 · ROBOT</div>
+        </div>
+      </div>
+      <sc-for list="{{ navItems }}" as="nav" hint-placeholder-count="4">
+        <div onClick="{{ nav.onClick }}" style="{{ nav.style }}" style-hover="background:rgba(255,255,255,0.06); color:#e8e8f0;">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; opacity:0.6; width:22px;">{{ nav.num }}</span>
+          <span>{{ nav.label }}</span>
+        </div>
+      </sc-for>
+      <div style="flex:1;"></div>
+      <div style="padding:14px; border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); display:flex; flex-direction:column; gap:8px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#6b6b85; letter-spacing:0.1em;">STATO DIARIO</div>
+        <div style="display:flex; justify-content:space-between; font-size:13px;"><span style="color:#9a9ab5;">Avanzamento tesi</span><span style="font-weight:600; color:var(--achi, #67E8F9);">{{ progressPct }}</span></div>
+        <div style="height:5px; border-radius:3px; background:rgba(255,255,255,0.07); overflow:hidden;"><div style="{{ progressBarStyle }}"></div></div>
+        <div style="display:flex; justify-content:space-between; font-size:13px;"><span style="color:#9a9ab5;">Note</span><span style="font-weight:600;">{{ statEntries }}</span></div>
+        <div style="display:flex; justify-content:space-between; font-size:13px;"><span style="color:#9a9ab5;">Giorni registrati</span><span style="font-weight:600;">{{ statDays }}</span></div>
+        <div style="display:flex; justify-content:space-between; font-size:13px;"><span style="color:#9a9ab5;">Allegati</span><span style="font-weight:600;">{{ statMedia }}</span></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ MAIN ============ -->
+  <div style="flex:1; min-width:0; display:flex; flex-direction:column;">
+
+    <!-- ===== OVERVIEW ===== -->
+    <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+      <div style="animation:fadeUp 0.45s ease both; padding:0 0 60px 0; position:relative;">
+        <canvas ref="{{ lightningRef }}" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px; align-items:center; padding:48px 44px 20px 44px; position:relative; z-index:1;">
+          <div style="display:flex; flex-direction:column; gap:20px; max-width:560px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.22em; color:var(--achi, #67E8F9);">TESI TRIENNALE — DIARIO DI BORDO</div>
+            
+            <div style="font-family:'Unbounded',sans-serif; font-size:clamp(24px, 3.2vw, 36px); font-weight:600; line-height:1.22; letter-spacing:-0.01em; text-wrap:pretty;">Realizzazione ambiente di realtà aumentata per estrazione dati da dispositivo robotico per riabilitazione medica</div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:26px; height:1px; background:var(--achi, #67E8F9);"></div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.12em; color:#b8b8d0;">MATTIA IOLLO</div>
+            </div><div style="font-size:15px; line-height:1.6; color:#9a9ab5; text-wrap:pretty;">Registro giorno per giorno di esperimenti, acquisizioni e risultati — dalle sessioni passthrough del visore alla telemetria del robot. Tutto ciò che registri qui diventa materiale per la tesi.</div>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button onClick="{{ openModal }}" style="padding:13px 24px; border-radius:12px; border:none; background:linear-gradient(135deg, var(--ac, #22D3EE), var(--ac2, #38BDF8)); color:#04141a; font-weight:700; font-size:14px; cursor:pointer; box-shadow:0 0 26px rgba(var(--ac-rgb, 34,211,238),0.35); transition:transform 0.15s ease, box-shadow 0.15s ease;" style-hover="transform:translateY(-2px); box-shadow:0 0 40px rgba(var(--ac-rgb, 34,211,238),0.55);">+ Nuova nota</button>
+              <button onClick="{{ goJournal }}" style="padding:13px 24px; border-radius:12px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.04); color:#e8e8f0; font-weight:600; font-size:14px; cursor:pointer; transition:background 0.15s ease;" style-hover="background:rgba(255,255,255,0.09);">Apri timeline</button>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <sc-for list="{{ overviewChips }}" as="chip" hint-placeholder-count="3">
+                <div style="padding:8px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.03); font-family:'IBM Plex Mono',monospace; font-size:11px; color:#9a9ab5;">{{ chip.label }}</div>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- 3D headset -->
+          <div onMouseDown="{{ modelDown }}" onTouchStart="{{ modelTouch }}" style="height: 304px; position: relative; display: flex; align-items: center; justify-content: center; cursor: grab; perspective: 1000px; user-select: none; -webkit-user-select: none; touch-action: none; background: repeating-linear-gradient(rgba(255,255,255,0.025) 0 1px, transparent 1px 44px), repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 44px); border-radius: 24px; width: 568px">
+            <div style="position:absolute; bottom:52px; width:280px; height:44px; border-radius:50%; background:radial-gradient(ellipse at center, rgba(var(--ac-rgb, 34,211,238),0.25), transparent 70%); animation:glowPulse 3.5s ease-in-out infinite;"></div>
+            <div style="animation:floaty 6s ease-in-out infinite;">
+              <div ref="{{ modelRef }}" style="width:260px; height:150px; position:relative; transform-style:preserve-3d; transform:rotateX(-8deg) rotateY(-28deg);">
+                <!-- front faceplate -->
+                <div style="position:absolute; inset:0; border-radius:36px; background:linear-gradient(150deg, #f2f2f6, #c8c8d4 60%, #b0b0c0); transform:translateZ(45px); box-shadow:inset 0 -8px 18px rgba(0,0,0,0.12);">
+                  <div style="position:absolute; left:52px; top:44px; width:22px; height:52px; border-radius:12px; background:linear-gradient(180deg,#26262e,#101016); box-shadow:inset 0 2px 4px rgba(255,255,255,0.15);"></div>
+                  <div style="position:absolute; left:119px; top:44px; width:22px; height:52px; border-radius:12px; background:linear-gradient(180deg,#26262e,#101016); box-shadow:inset 0 2px 4px rgba(255,255,255,0.15);"></div>
+                  <div style="position:absolute; left:186px; top:44px; width:22px; height:52px; border-radius:12px; background:linear-gradient(180deg,#26262e,#101016); box-shadow:inset 0 2px 4px rgba(255,255,255,0.15);"></div>
+                </div>
+                <!-- back (facial interface) -->
+                <div style="position:absolute; inset:0; border-radius:36px; background:#15151d; transform:rotateY(180deg) translateZ(45px); display:flex; align-items:center; justify-content:center; gap:18px;">
+                  <div style="width:58px; height:58px; border-radius:50%; background:radial-gradient(circle at 40% 35%, rgba(var(--ac-rgb, 34,211,238),0.9), rgba(var(--ac-rgb, 34,211,238),0.15) 60%, transparent 75%); box-shadow:0 0 22px rgba(var(--ac-rgb, 34,211,238),0.5); animation:glowPulse 2.8s ease-in-out infinite;"></div>
+                  <div style="width:58px; height:58px; border-radius:50%; background:radial-gradient(circle at 40% 35%, rgba(var(--ac-rgb, 34,211,238),0.9), rgba(var(--ac-rgb, 34,211,238),0.15) 60%, transparent 75%); box-shadow:0 0 22px rgba(var(--ac-rgb, 34,211,238),0.5); animation:glowPulse 2.8s ease-in-out infinite;"></div>
+                </div>
+                <!-- top -->
+                <div style="position:absolute; left:0; top:30px; width:260px; height:90px; border-radius:30px; background:linear-gradient(90deg,#e6e6ec,#cfcfda); transform:rotateX(90deg) translateZ(105px);"></div>
+                <!-- bottom -->
+                <div style="position:absolute; left:0; top:30px; width:260px; height:90px; border-radius:30px; background:#9c9cae; transform:rotateX(-90deg) translateZ(45px);"></div>
+                <!-- left / right sides -->
+                <div style="position:absolute; left:85px; top:0; width:90px; height:150px; border-radius:30px; background:#c2c2d0; transform:rotateY(-90deg) translateZ(175px);"></div>
+                <div style="position:absolute; left:85px; top:0; width:90px; height:150px; border-radius:30px; background:#d8d8e2; transform:rotateY(90deg) translateZ(175px);"></div>
+                <!-- head strap ring (horizontal) -->
+                <div style="position:absolute; left:20px; top:-35px; width:220px; height:220px; border-radius:50%; border:13px solid #dddde6; transform:rotateX(90deg) translateY(-58px); box-shadow:0 0 14px rgba(0,0,0,0.15);"></div>
+              </div>
+            </div>
+            <div style="position:absolute; bottom:16px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.18em; color:#565672;">TRASCINA PER RUOTARE · VISORE MR</div>
+          </div>
+        </div>
+
+        <!-- thesis progress -->
+        <div style="padding:16px 44px 0 44px;">
+          <div style="padding:22px 26px; border-radius:18px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); display:flex; align-items:center; gap:26px; flex-wrap:wrap;">
+            <div style="display:flex; flex-direction:column; gap:4px; min-width:150px;">
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.18em; color:#6b6b85;">AVANZAMENTO TESI</div>
+              <div style="font-family:'Unbounded',sans-serif; font-size:34px; font-weight:600; color:var(--achi, #67E8F9);">{{ progressPct }}</div>
+            </div>
+            <div style="flex:1; min-width:220px; display:flex; flex-direction:column; gap:10px;">
+              <div style="height:10px; border-radius:5px; background:rgba(255,255,255,0.07); overflow:hidden;"><div style="{{ progressBarStyle }}"></div></div>
+              <input type="range" min="0" max="100" step="1" value="{{ progress }}" onChange="{{ onProgress }}" style="width:100%; accent-color:var(--ac, #22D3EE); cursor:pointer;">
+              <div style="font-size:12px; color:#6b6b85;">Trascina il cursore per aggiornare la percentuale di completamento — puoi cambiarla in qualsiasi momento.</div>
+              <div style="display:flex; align-items:center; gap:10px; margin-top:2px;">
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#6b6b85; letter-spacing:0.1em;">TEMA</div>
+                <sc-for list="{{ themeSwatches }}" as="sw" hint-placeholder-count="5">
+                  <div onClick="{{ sw.onClick }}" title="{{ sw.label }}" style="{{ sw.style }}"></div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- recent entries -->
+        <div style="padding:16px 44px 0 44px; display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; align-items:baseline; gap:14px;">
+            <div style="font-size:18px; font-weight:700;">Ultime note</div>
+            <div onClick="{{ goJournal }}" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--achi, #67E8F9); cursor:pointer; letter-spacing:0.08em;" style-hover="color:#a5f3fc;">VEDI TUTTE →</div>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:14px;">
+            <sc-for list="{{ recentEntries }}" as="entry" hint-placeholder-count="3">
+              <div onClick="{{ goJournal }}" style="padding:18px; border-radius:16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); cursor:pointer; transition:border-color 0.15s ease, transform 0.15s ease; display:flex; flex-direction:column; gap:8px;" style-hover="border-color:rgba(var(--ac-rgb, 34,211,238),0.4); transform:translateY(-2px);">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="{{ entry.chipStyle }}">{{ entry.chapter }}</span>
+                  <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#6b6b85;">{{ entry.dayShort }}</span>
+                </div>
+                <div style="font-weight:600; font-size:15px;">{{ entry.title }}</div>
+                <div style="font-size:13px; color:#9a9ab5; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ entry.text }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ===== JOURNAL (timeline) ===== -->
+    <sc-if value="{{ isJournal }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:fadeUp 0.45s ease both; padding:40px 44px 80px 44px; max-width:880px; width:100%; margin:0 auto;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:34px;">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.22em; color:var(--achi, #67E8F9); margin-bottom:8px;">TIMELINE</div>
+            <div style="font-size:30px; font-weight:700;">Registro giornaliero</div>
+          </div>
+          <button onClick="{{ openModal }}" style="padding:12px 22px; border-radius:12px; border:none; background:linear-gradient(135deg, var(--ac, #22D3EE), var(--ac2, #38BDF8)); color:#04141a; font-weight:700; font-size:14px; cursor:pointer; box-shadow:0 0 22px rgba(var(--ac-rgb, 34,211,238),0.3); transition:transform 0.15s ease;" style-hover="transform:translateY(-2px);">+ Nuova nota</button>
+        </div>
+
+        <sc-if value="{{ hasEntries }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex; flex-direction:column; gap:36px;">
+            <sc-for list="{{ dayGroups }}" as="group" hint-placeholder-count="2">
+              <div>
+                <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
+                  <div style="width:10px; height:10px; border-radius:50%; background:var(--ac, #22D3EE); box-shadow:0 0 12px rgba(var(--ac-rgb, 34,211,238),0.7);"></div>
+                  <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.14em; color:#b8b8d0;">{{ group.label }}</div>
+                  <div style="flex:1; height:1px; background:linear-gradient(90deg, rgba(255,255,255,0.12), transparent);"></div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:14px; padding-left:4px; margin-left:4px; border-left:1px solid rgba(255,255,255,0.08);">
+                  <sc-for list="{{ group.entries }}" as="entry" hint-placeholder-count="2">
+                    <div style="margin-left:18px; padding:20px 22px; border-radius:16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); transition:border-color 0.15s ease; display:flex; flex-direction:column; gap:12px;" style-hover="border-color:rgba(255,255,255,0.16);">
+                      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                        <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--achi, #67E8F9);">{{ entry.time }}</span>
+                        <span style="{{ entry.chipStyle }}">{{ entry.chapter }}</span>
+                        <div style="flex:1;"></div>
+                        <div onClick="{{ entry.onEdit }}" title="Modifica" style="cursor:pointer; color:#565672; font-size:15px; transition:color 0.15s ease;" style-hover="color:var(--achi, #67E8F9);">✎</div>
+                        <div onClick="{{ entry.onStar }}" title="Aggiungi ai preferiti" style="{{ entry.starStyle }}" style-hover="transform:scale(1.2);">{{ entry.starIcon }}</div>
+                        <div onClick="{{ entry.onDelete }}" title="Elimina" style="cursor:pointer; color:#565672; font-size:15px; transition:color 0.15s ease;" style-hover="color:#fb7185;">✕</div>
+                      </div>
+                      <div style="font-weight:700; font-size:17px;">{{ entry.title }}</div>
+                      <sc-if value="{{ entry.text }}" hint-placeholder-val="{{ true }}">
+                        {{ entry.bodyEl }}
+                      </sc-if>
+                      <sc-if value="{{ entry.hasImages }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                          <sc-for list="{{ entry.images }}" as="img" hint-placeholder-count="1">
+                            <img src="{{ img.src }}" onClick="{{ img.onOpen }}" style="width:110px; height:82px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,255,255,0.12); cursor:zoom-in; transition:transform 0.15s ease;" style-hover="transform:scale(1.05);">
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ entry.audio }}" hint-placeholder-val="{{ false }}">
+                        <audio controls="" src="{{ entry.audio }}" style="width:100%; max-width:420px; height:38px;"></audio>
+                      </sc-if>
+                      <sc-if value="{{ entry.hasLinks }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                          <sc-for list="{{ entry.links }}" as="link" hint-placeholder-count="1">
+                            <a href="{{ link.url }}" target="_blank" style="font-family:'IBM Plex Mono',monospace; font-size:12px;">↗ {{ link.label }}</a>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noEntries }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:70px 20px; text-align:center; border:1px dashed rgba(255,255,255,0.12); border-radius:20px; color:#6b6b85;">
+            <div style="font-size:16px; font-weight:600; margin-bottom:6px;">Nessuna nota</div>
+            <div style="font-size:13px;">Premi “+ Nuova nota” per registrare il primo esperimento.</div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ===== PIANO (Kanban + Milestone) ===== -->
+    <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:fadeUp 0.45s ease both; padding:40px 44px 80px 44px; max-width:1200px; width:100%; margin:0 auto;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.22em; color:var(--achi, #67E8F9); margin-bottom:8px;">PIANO DI LAVORO</div>
+        <div style="font-size:30px; font-weight:700; margin-bottom:26px;">Board e milestone</div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:26px;">
+          <input value="{{ taskInput }}" onChange="{{ onTaskInput }}" onKeyDown="{{ onTaskKey }}" placeholder="Nuova attività — es. Calibrare i sensori di forza" style="flex:1; min-width:220px; padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:14px; outline:none;">
+          <select value="{{ taskChapter }}" onChange="{{ onTaskChapter }}" style="padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:#12121c; color:#e8e8f0; font-size:13px; outline:none;">
+            <sc-for list="{{ chapterOptions }}" as="opt" hint-placeholder-count="6">
+              <option value="{{ opt }}">{{ opt }}</option>
+            </sc-for>
+          </select>
+          <button onClick="{{ addTask }}" style="padding:12px 22px; border-radius:12px; border:none; background:linear-gradient(135deg, var(--ac, #22D3EE), var(--ac2, #38BDF8)); color:#04141a; font-weight:700; font-size:14px; cursor:pointer;">+ Aggiungi</button>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:18px; margin-bottom:46px;">
+          <sc-for list="{{ kanbanColumns }}" as="col" hint-placeholder-count="3">
+            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:12px; min-height:160px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="{{ col.dotStyle }}"></div>
+                <div style="font-weight:700; font-size:14px;">{{ col.label }}</div>
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#6b6b85;">{{ col.count }}</div>
+              </div>
+              <sc-for list="{{ col.tasks }}" as="task" hint-placeholder-count="2">
+                <div style="padding:14px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:8px;">
+                  <span style="{{ task.chipStyle }}">{{ task.chapter }}</span>
+                  <div style="font-size:13.5px; line-height:1.5; color:#e0e0ec;">{{ task.text }}</div>
+                  <div style="display:flex; gap:6px; justify-content:flex-end; align-items:center;">
+                    <div onClick="{{ task.onPrev }}" style="{{ task.prevStyle }}">‹</div>
+                    <div onClick="{{ task.onNext }}" style="{{ task.nextStyle }}">›</div>
+                    <div onClick="{{ task.onDelete }}" style="cursor:pointer; color:#565672; font-size:13px; padding:2px 6px;" style-hover="color:#fb7185;">✕</div>
+                  </div>
+                </div>
+              </sc-for>
+              <sc-if value="{{ col.empty }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:12px; color:#565672; text-align:center; padding:14px 0;">Nessuna attività</div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:16px;">
+          <div style="font-size:20px; font-weight:700;">Milestone</div>
+          <div style="font-size:13px; color:#6b6b85;">Scadenze per capitoli e fasi del progetto</div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:20px;">
+          <input value="{{ msTitle }}" onChange="{{ onMsTitle }}" placeholder="Titolo milestone — es. Capitolo 3: Metodologia" style="flex:2; min-width:220px; padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:14px; outline:none;">
+          <select value="{{ msChapter }}" onChange="{{ onMsChapter }}" style="padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:#12121c; color:#e8e8f0; font-size:13px; outline:none;">
+            <sc-for list="{{ chapterOptions }}" as="opt" hint-placeholder-count="6">
+              <option value="{{ opt }}">{{ opt }}</option>
+            </sc-for>
+          </select>
+          <input type="date" value="{{ msDate }}" onChange="{{ onMsDate }}" style="padding:11px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:#12121c; color:#e8e8f0; font-size:13px; outline:none;">
+          <button onClick="{{ addMilestone }}" style="padding:12px 22px; border-radius:12px; border:none; background:linear-gradient(135deg, var(--ac, #22D3EE), var(--ac2, #38BDF8)); color:#04141a; font-weight:700; font-size:14px; cursor:pointer;">+ Aggiungi</button>
+        </div>
+        <sc-if value="{{ hasMilestones }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <sc-for list="{{ milestoneRows }}" as="ms" hint-placeholder-count="2">
+              <div style="{{ ms.rowStyle }}">
+                <div onClick="{{ ms.onToggle }}" style="{{ ms.checkStyle }}">{{ ms.checkIcon }}</div>
+                <div style="flex:1; min-width:0;">
+                  <div style="{{ ms.titleStyle }}">{{ ms.title }}</div>
+                  <div style="display:flex; gap:10px; align-items:center; margin-top:2px; flex-wrap:wrap;">
+                    <span style="{{ ms.chipStyle }}">{{ ms.chapter }}</span>
+                    <span style="{{ ms.dueStyle }}">{{ ms.dueLabel }}</span>
+                  </div>
+                </div>
+                <div onClick="{{ ms.onDelete }}" style="cursor:pointer; color:#565672; font-size:14px;" style-hover="color:#fb7185;">✕</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noMilestones }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:30px; text-align:center; border:1px dashed rgba(255,255,255,0.12); border-radius:16px; color:#6b6b85; font-size:13px;">Nessuna milestone ancora — aggiungi la prima scadenza qui sopra.</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ===== REVIEW ===== -->
+    <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:fadeUp 0.45s ease both; padding:40px 44px 80px 44px; max-width:1100px; width:100%; margin:0 auto;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.22em; color:var(--achi, #67E8F9); margin-bottom:8px;">REVISIONE E SELEZIONE</div>
+        <div style="font-size:30px; font-weight:700; margin-bottom:26px;">Trova e contrassegna il materiale migliore</div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:14px;">
+          <input value="{{ search }}" onChange="{{ onSearch }}" placeholder="Cerca titolo, testo, link…" style="flex:1; min-width:220px; padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:14px; outline:none;">
+          <div onClick="{{ toggleStarredOnly }}" style="{{ starredChipStyle }}" style-hover="border-color:rgba(251,191,36,0.6);">★ Solo preferite</div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:26px;">
+          <sc-for list="{{ chapterChips }}" as="chip" hint-placeholder-count="5">
+            <div onClick="{{ chip.onClick }}" style="{{ chip.style }}" style-hover="border-color:rgba(255,255,255,0.3);">{{ chip.name }}</div>
+          </sc-for>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#6b6b85; margin-bottom:14px; letter-spacing:0.1em;">{{ filteredCount }} RISULTATI</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:14px;">
+          <sc-for list="{{ filteredEntries }}" as="entry" hint-placeholder-count="4">
+            <div style="padding:18px; border-radius:16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); display:flex; flex-direction:column; gap:9px; transition:border-color 0.15s ease;" style-hover="border-color:rgba(255,255,255,0.18);">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span style="{{ entry.chipStyle }}">{{ entry.chapter }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#6b6b85;">{{ entry.dayShort }} · {{ entry.time }}</span>
+                <div style="flex:1;"></div>
+                <div onClick="{{ entry.onEdit }}" title="Modifica" style="cursor:pointer; color:#565672; font-size:14px; transition:color 0.15s ease;" style-hover="color:var(--achi, #67E8F9);">✎</div>
+                <div onClick="{{ entry.onStar }}" style="{{ entry.starStyle }}" style-hover="transform:scale(1.2);">{{ entry.starIcon }}</div>
+                <div onClick="{{ entry.onDelete }}" title="Elimina" style="cursor:pointer; color:#565672; font-size:14px; transition:color 0.15s ease;" style-hover="color:#fb7185;">✕</div>
+              </div>
+              <div style="font-weight:600; font-size:15px;">{{ entry.title }}</div>
+              <div style="font-size:13px; color:#9a9ab5; line-height:1.5; max-height:60px; overflow:hidden;">{{ entry.bodyEl }}</div>
+              <sc-if value="{{ entry.hasImages }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex; gap:8px;">
+                  <sc-for list="{{ entry.images }}" as="img" hint-placeholder-count="1">
+                    <img src="{{ img.src }}" onClick="{{ img.onOpen }}" style="width:64px; height:48px; object-fit:cover; border-radius:8px; border:1px solid rgba(255,255,255,0.12); cursor:zoom-in;">
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#565672;">{{ entry.metaLine }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ===== BIBLIOGRAFIA ===== -->
+    <sc-if value="{{ isBiblio }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:fadeUp 0.45s ease both; padding:40px 44px 80px 44px; max-width:900px; width:100%; margin:0 auto;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.22em; color:var(--achi, #67E8F9); margin-bottom:8px;">BIBLIOGRAFIA</div>
+        <div style="font-size:30px; font-weight:700; margin-bottom:6px;">Gestione delle fonti</div>
+        <div style="font-size:14px; color:#9a9ab5; margin-bottom:24px;">Incolla un DOI o un link per recuperare titolo, autori e abstract automaticamente.</div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+          <input value="{{ sourceInput }}" onChange="{{ onSourceInput }}" onKeyDown="{{ onSourceKey }}" placeholder="DOI (es. 10.1109/xxxx) o URL…" style="flex:1; min-width:220px; padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:14px; outline:none; font-family:'IBM Plex Mono',monospace;">
+          <button onClick="{{ fetchSource }}" style="{{ fetchBtnStyle }}">{{ fetchBtnLabel }}</button>
+          <div onClick="{{ toggleManualSource }}" style="padding:12px 18px; border-radius:12px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.04); color:#9a9ab5; font-size:13px; font-weight:600; cursor:pointer;" style-hover="color:#e8e8f0;">+ Manuale</div>
+        </div>
+        <sc-if value="{{ sourceError }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12.5px; color:#fb7185; margin-bottom:10px;">{{ sourceError }}</div>
+        </sc-if>
+
+        <sc-if value="{{ showManualSource }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:10px; padding:16px; border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); margin-bottom:16px;">
+            <input value="{{ manualTitle }}" onChange="{{ onManualTitle }}" placeholder="Titolo" style="padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:13px; outline:none; grid-column:1 / -1;">
+            <input value="{{ manualAuthors }}" onChange="{{ onManualAuthors }}" placeholder="Autori (es. M. Rossi, A. Bianchi)" style="padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:13px; outline:none;">
+            <input value="{{ manualYear }}" onChange="{{ onManualYear }}" placeholder="Anno" style="padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:13px; outline:none;">
+            <input value="{{ manualContainer }}" onChange="{{ onManualContainer }}" placeholder="Rivista / conferenza" style="padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:13px; outline:none;">
+            <input value="{{ manualUrl }}" onChange="{{ onManualUrl }}" placeholder="URL" style="padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:13px; outline:none; font-family:'IBM Plex Mono',monospace;">
+            <button onClick="{{ addManualSource }}" style="padding:10px 18px; border-radius:10px; border:none; background:linear-gradient(135deg, var(--ac, #22D3EE), var(--ac2, #38BDF8)); color:#04141a; font-weight:700; font-size:13px; cursor:pointer; grid-column:1 / -1; justify-self:start;">Aggiungi fonte</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ hasSources }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin:26px 0 12px 0; flex-wrap:wrap; gap:10px;">
+            <div style="font-size:18px; font-weight:700;">Fonti raccolte ({{ sourceCount }})</div>
+            <div onClick="{{ downloadIeee }}" style="padding:9px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.04); color:#9a9ab5; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="color:#e8e8f0;">Esporta citazioni IEEE (.txt)</div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <sc-for list="{{ sourceRows }}" as="src" hint-placeholder-count="3">
+              <div style="padding:16px 18px; border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); display:flex; flex-direction:column; gap:6px;">
+                <div style="display:flex; align-items:baseline; gap:10px;">
+                  <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--achi, #67E8F9); font-weight:700;">[{{ src.num }}]</span>
+                  <div style="font-weight:600; font-size:14.5px; flex:1;">{{ src.title }}</div>
+                  <div onClick="{{ src.onDelete }}" style="cursor:pointer; color:#565672; font-size:14px;" style-hover="color:#fb7185;">✕</div>
+                </div>
+                <div style="font-size:12.5px; color:#9a9ab5;">{{ src.metaLine }}</div>
+                <sc-if value="{{ src.abstract }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:12.5px; color:#6b6b85; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ src.abstract }}</div>
+                </sc-if>
+                <a href="{{ src.url }}" target="_blank" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px;">↗ {{ src.urlLabel }}</a>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noSources }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:40px; text-align:center; border:1px dashed rgba(255,255,255,0.12); border-radius:16px; color:#6b6b85; font-size:13px;">Nessuna fonte ancora. Cerca un DOI qui sopra per iniziare.</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ===== EXPORT ===== -->
+    <sc-if value="{{ isExport }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:fadeUp 0.45s ease both; padding:40px 44px 80px 44px; max-width:900px; width:100%; margin:0 auto;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.22em; color:var(--achi, #67E8F9); margin-bottom:8px;">ESPORTAZIONE</div>
+        <div style="font-size:30px; font-weight:700; margin-bottom:10px;">Compila il diario in un documento</div>
+        <div style="font-size:14px; color:#9a9ab5; margin-bottom:26px;">In ordine cronologico, raggruppato per giorno. Salvalo in PDF o scarica un documento Word per l'appendice della tesi.</div>
+
+        <div style="padding:18px 20px; border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:26px;">
+          <div style="flex:1; min-width:200px;">
+            <div style="font-weight:700; font-size:14px; margin-bottom:2px;">Backup dei dati</div>
+            <div style="font-size:12.5px; color:#9a9ab5;">Note, board, milestone e fonti — tutto in un unico file da conservare o trasferire.</div>
+          </div>
+          <div onClick="{{ exportBackup }}" style="padding:10px 18px; border-radius:10px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05); color:#e8e8f0; font-size:13px; font-weight:600; cursor:pointer;" style-hover="background:rgba(255,255,255,0.1);">⬇ Esporta backup (.json)</div>
+          <label for="rj-backup-input" style="padding:10px 18px; border-radius:10px; border:1px dashed rgba(var(--ac-rgb, 34,211,238),0.4); background:rgba(var(--ac-rgb, 34,211,238),0.06); color:var(--achi,#67E8F9); font-size:13px; font-weight:600; cursor:pointer;">⬆ Importa backup</label>
+          <input id="rj-backup-input" type="file" accept="application/json" onChange="{{ onImportBackup }}" style="display:none;">
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:14px;">
+          <div onClick="{{ setScopeAll }}" style="{{ scopeAllStyle }}" style-hover="border-color:rgba(255,255,255,0.3);">Tutte le note</div>
+          <div onClick="{{ setScopeStarred }}" style="{{ scopeStarredStyle }}" style-hover="border-color:rgba(255,255,255,0.3);">★ Solo preferite</div>
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:30px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#6b6b85;">FORMATO</div>
+          <div onClick="{{ setFormatPdf }}" style="{{ formatPdfStyle }}" style-hover="border-color:rgba(255,255,255,0.3);">PDF</div>
+          <div onClick="{{ setFormatDoc }}" style="{{ formatDocStyle }}" style-hover="border-color:rgba(255,255,255,0.3);">DOC (Word)</div>
+          <div style="flex:1;"></div>
+          <button onClick="{{ doExport }}" style="padding:12px 24px; border-radius:12px; border:none; background:linear-gradient(135deg, var(--ac, #22D3EE), var(--ac2, #38BDF8)); color:#04141a; font-weight:700; font-size:14px; cursor:pointer; box-shadow:0 0 22px rgba(var(--ac-rgb, 34,211,238),0.3); transition:transform 0.15s ease;" style-hover="transform:translateY(-2px);">{{ exportBtnLabel }}</button>
+        </div>
+
+        <div id="print-area" style="background:#ffffff; color:#16161e; border-radius:16px; padding:52px 56px; box-shadow:0 20px 60px rgba(0,0,0,0.5); font-family:'Space Grotesk',sans-serif;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.2em; color:#8a8a9a; margin-bottom:14px;">DIARIO DI RICERCA — {{ exportDate }}</div>
+          <div style="font-size:26px; font-weight:700; line-height:1.2; margin-bottom:6px; text-wrap:pretty;">Realizzazione ambiente di realtà aumentata per estrazione dati da dispositivo robotico per riabilitazione medica</div>
+          <div style="font-size:13px; color:#3a3a48; font-weight:600; margin-bottom:4px;">Mattia Iollo — Tesi triennale</div>
+          <div style="font-size:13px; color:#6a6a7a; margin-bottom:8px;">{{ exportSubtitle }}</div>
+          <div style="height:2px; background:#16161e; margin:22px 0 30px 0;"></div>
+          <div style="display:flex; flex-direction:column; gap:30px;">
+            <sc-for list="{{ exportGroups }}" as="group" hint-placeholder-count="2">
+              <div>
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.12em; color:#16161e; font-weight:500; border-bottom:1px solid #d8d8e0; padding-bottom:8px; margin-bottom:16px;">{{ group.label }}</div>
+                <div style="display:flex; flex-direction:column; gap:18px;">
+                  <sc-for list="{{ group.entries }}" as="entry" hint-placeholder-count="2">
+                    <div style="break-inside:avoid;">
+                      <div style="display:flex; gap:10px; align-items:baseline; margin-bottom:4px;">
+                        <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8a8a9a;">{{ entry.time }}</span>
+                        <span style="font-weight:700; font-size:15px;">{{ entry.title }}</span>
+                        <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8a8a9a;">[{{ entry.chapter }}]{{ entry.starMark }}</span>
+                      </div>
+                      {{ entry.bodyEl }}
+                      <sc-if value="{{ entry.hasImages }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+                          <sc-for list="{{ entry.images }}" as="img" hint-placeholder-count="1">
+                            <img src="{{ img.src }}" style="width:180px; height:130px; object-fit:cover; border-radius:6px; border:1px solid #d8d8e0;">
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ entry.hasLinks }}" hint-placeholder-val="{{ false }}">
+                        <div style="margin-top:8px; display:flex; flex-direction:column; gap:3px;">
+                          <sc-for list="{{ entry.links }}" as="link" hint-placeholder-count="1">
+                            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#4a4a58;">↗ {{ link.label }} — {{ link.url }}</div>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ entry.audio }}" hint-placeholder-val="{{ false }}">
+                        <div style="margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8a8a9a;">🎙 Nota audio allegata (disponibile nell'app)</div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ===== ASSISTANT ===== -->
+    <sc-if value="{{ isAssistant }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:fadeUp 0.45s ease both; padding:40px 44px 40px 44px; max-width:760px; width:100%; margin:0 auto; display:flex; flex-direction:column; flex:1; min-height:0;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.22em; color:var(--achi, #67E8F9); margin-bottom:8px;">ASSISTENTE IA</div>
+        <div style="font-family:'Unbounded',sans-serif; font-size:30px; font-weight:600; margin-bottom:6px;">MARKUS</div>
+        <div style="font-size:14px; color:#9a9ab5; margin-bottom:22px;">MARKUS conosce le tue note e l'avanzamento della tesi. Chiedigli di riassumere, collegare idee o suggerirti i prossimi passi.</div>
+
+        <sc-if value="{{ aiUnavailable }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:18px 22px; border-radius:14px; border:1px solid rgba(251,191,36,0.35); background:rgba(251,191,36,0.07); color:#fbbf24; font-size:13px; line-height:1.6;">MARKUS non è disponibile in questa versione (es. file offline). Funziona quando l'app è aperta nell'ambiente online.</div>
+        </sc-if>
+
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:12px; padding:6px 2px; min-height:200px;">
+          <sc-for list="{{ chatMessages }}" as="msg" hint-placeholder-count="1">
+            <div style="{{ msg.style }}">{{ msg.text }}</div>
+          </sc-for>
+          <sc-if value="{{ chatBusy }}" hint-placeholder-val="{{ false }}">
+            <div style="align-self:flex-start; padding:12px 18px; border-radius:16px 16px 16px 4px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#9a9ab5; font-size:13px; animation:recBlink 1.4s ease-in-out infinite;">Sto pensando…</div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ showSuggestions }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin:14px 0;">
+            <sc-for list="{{ chatSuggestions }}" as="sug" hint-placeholder-count="3">
+              <div onClick="{{ sug.onClick }}" style="padding:9px 15px; border-radius:999px; border:1px solid rgba(var(--ac-rgb, 34,211,238),0.3); background:rgba(var(--ac-rgb, 34,211,238),0.06); color:var(--achi, #67E8F9); font-size:12px; cursor:pointer; transition:background 0.15s ease;" style-hover="background:rgba(var(--ac-rgb, 34,211,238),0.14);">{{ sug.label }}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <input value="{{ chatInput }}" onChange="{{ onChatInput }}" onKeyDown="{{ onChatKey }}" placeholder="Scrivi a MARKUS…" style="flex:1; padding:13px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:14px; outline:none;">
+          <button onClick="{{ sendChat }}" style="{{ chatSendStyle }}">Invia</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- mobile bottom nav spacer -->
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+      <div style="height:74px;"></div>
+    </sc-if>
+  </div>
+
+  <!-- ============ BOTTOM NAV (mobile) ============ -->
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; left:0; right:0; bottom:0; display:flex; justify-content:space-around; padding:10px 8px calc(10px + env(safe-area-inset-bottom)) 8px; background:rgba(12,12,20,0.92); backdrop-filter:blur(14px); border-top:1px solid rgba(255,255,255,0.08); z-index:50;">
+      <sc-for list="{{ navItems }}" as="nav" hint-placeholder-count="4">
+        <div onClick="{{ nav.onClick }}" style="{{ nav.mobileStyle }}">{{ nav.label }}</div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <!-- ============ NEW ENTRY MODAL ============ -->
+  <sc-if value="{{ showModal }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position:fixed; inset:0; background:rgba(5,5,10,0.75); backdrop-filter:blur(6px); z-index:100; display:flex; align-items:center; justify-content:center; padding:18px; animation:fadeUp 0.25s ease both;">
+      <div onClick="{{ stopProp }}" style="width:100%; max-width:620px; max-height:88vh; overflow-y:auto; background:#12121c; border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:30px; display:flex; flex-direction:column; gap:18px; box-shadow:0 30px 80px rgba(0,0,0,0.6);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:20px; font-weight:700;">{{ modalTitle }}</div>
+          <div onClick="{{ closeModal }}" style="cursor:pointer; color:#6b6b85; font-size:18px; padding:4px;" style-hover="color:#e8e8f0;">✕</div>
+        </div>
+        <input value="{{ formTitle }}" onChange="{{ onTitle }}" placeholder="Titolo — es. Test latenza passthrough #3" style="padding:13px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:15px; font-weight:600; outline:none;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <sc-for list="{{ formChapterChips }}" as="chip" hint-placeholder-count="5">
+            <div onClick="{{ chip.onClick }}" style="{{ chip.style }}" style-hover="border-color:rgba(255,255,255,0.3);">{{ chip.name }}</div>
+          </sc-for>
+        </div>
+        <textarea value="{{ formText }}" onChange="{{ onText }}" placeholder="Cos'è successo? Osservazioni, misurazioni, problemi, idee…" rows="5" style="padding:13px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:14px; line-height:1.6; outline:none; resize:vertical; min-height:110px;"></textarea>
+        <div style="font-size:11.5px; color:#565672; margin-top:-10px;">Supporta blocchi ```codice``` per snippet C++/MATLAB e formule $LaTeX$ o $$LaTeX$$.</div>
+        <sc-if value="{{ hasSourcesForCite }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; gap:8px; align-items:center;">
+            <select value="{{ citeSelect }}" onChange="{{ onCiteSelect }}" style="flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); background:#1a1a26; color:#e8e8f0; font-size:12.5px; outline:none;">
+              <sc-for list="{{ citeOptions }}" as="opt" hint-placeholder-count="1">
+                <option value="{{ opt.id }}">{{ opt.label }}</option>
+              </sc-for>
+            </select>
+            <div onClick="{{ insertCitation }}" style="padding:10px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05); color:#e8e8f0; font-size:12.5px; font-weight:600; cursor:pointer; white-space:nowrap;">Cita fonte</div>
+          </div>
+        </sc-if>
+
+        <!-- attachments -->
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <label for="rj-file-input" style="padding:11px 18px; border-radius:12px; border:1px dashed rgba(var(--ac-rgb, 34,211,238),0.4); background:rgba(var(--ac-rgb, 34,211,238),0.06); color:var(--achi, #67E8F9); font-size:13px; font-weight:600; cursor:pointer;">🖼 Aggiungi immagini / video</label>
+          <input id="rj-file-input" type="file" accept="image/*,video/*" multiple="" onChange="{{ onPickFiles }}" style="display:none;">
+          <div onClick="{{ toggleRecording }}" style="{{ recBtnStyle }}">{{ recLabel }}</div>
+        </div>
+        <sc-if value="{{ hasDraftImages }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <sc-for list="{{ draftImages }}" as="img" hint-placeholder-count="1">
+              <div style="position:relative;">
+                <img src="{{ img.src }}" style="width:92px; height:68px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,255,255,0.15);">
+                <div onClick="{{ img.onRemove }}" style="position:absolute; top:-7px; right:-7px; width:20px; height:20px; border-radius:50%; background:#fb7185; color:#1a0508; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer;">✕</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ draftAudio }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <audio controls="" src="{{ draftAudio }}" style="flex:1; height:38px;"></audio>
+            <div onClick="{{ removeDraftAudio }}" style="cursor:pointer; color:#fb7185; font-size:13px; font-weight:600;">Rimuovi</div>
+          </div>
+        </sc-if>
+
+        <!-- links -->
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input value="{{ formLinkLabel }}" onChange="{{ onLinkLabel }}" placeholder="Etichetta riferimento" style="flex:1; min-width:130px; padding:11px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:13px; outline:none;">
+          <input value="{{ formLinkUrl }}" onChange="{{ onLinkUrl }}" placeholder="https://…" style="flex:2; min-width:170px; padding:11px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#e8e8f0; font-size:13px; outline:none; font-family:'IBM Plex Mono',monospace;">
+          <div onClick="{{ addLink }}" style="padding:11px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05); color:#e8e8f0; font-size:13px; font-weight:600; cursor:pointer;" style-hover="background:rgba(255,255,255,0.1);">+ Aggiungi link</div>
+        </div>
+        <sc-if value="{{ hasDraftLinks }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <sc-for list="{{ draftLinks }}" as="link" hint-placeholder-count="1">
+              <div style="display:flex; align-items:center; gap:10px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#9a9ab5;">
+                <span style="color:var(--achi, #67E8F9);">↗</span><span>{{ link.label }}</span><span style="opacity:0.5; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:260px;">{{ link.url }}</span>
+                <div onClick="{{ link.onRemove }}" style="cursor:pointer; color:#fb7185;">✕</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:6px;">
+          <button onClick="{{ closeModal }}" style="padding:12px 22px; border-radius:12px; border:1px solid rgba(255,255,255,0.14); background:transparent; color:#9a9ab5; font-weight:600; font-size:14px; cursor:pointer;" style-hover="color:#e8e8f0;">Annulla</button>
+          <button onClick="{{ saveEntry }}" style="{{ saveBtnStyle }}">{{ saveBtnLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ LIGHTBOX ============ -->
+  <sc-if value="{{ lightboxSrc }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeLightbox }}" style="position:fixed; inset:0; background:rgba(5,5,10,0.88); backdrop-filter:blur(8px); z-index:200; display:flex; align-items:center; justify-content:center; padding:30px; cursor:zoom-out; animation:fadeUp 0.2s ease both;">
+      <img src="{{ lightboxSrc }}" style="max-width:92%; max-height:92%; border-radius:14px; box-shadow:0 30px 90px rgba(0,0,0,0.7);">
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;autoRotate&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;3D Model&quot;}}">
+const CHAPTERS = [
+  { name: 'Generale', color: '#9a9ab5' },
+  { name: 'Ambiente AR', color: '#22d3ee' },
+  { name: 'Dati Robot', color: '#a78bfa' },
+  { name: 'Riabilitazione', color: '#34d399' },
+  { name: 'Test e Risultati', color: '#fbbf24' },
+  { name: 'Scrittura', color: '#fb7185' },
+];
+const CHAPTER_MIGRATION = {
+  'General': 'Generale',
+  'AR Environment': 'Ambiente AR',
+  'Robot Data': 'Dati Robot',
+  'Rehabilitation': 'Riabilitazione',
+  'Testing & Results': 'Test e Risultati',
+  'Writing': 'Scrittura',
+};
+const LS_KEY = 'rj-entries-v1';
+const TASKS_KEY = 'rj-tasks-v1';
+const MILESTONES_KEY = 'rj-milestones-v1';
+const SOURCES_KEY = 'rj-sources-v1';
+const THEME_KEY = 'rj-theme-v1';
+
+const THEMES = {
+  cyan:    { label: 'Ciano',    ac: '#22D3EE', ac2: '#38BDF8', hi: '#67E8F9', rgb: '34,211,238' },
+  violet:  { label: 'Viola',    ac: '#A78BFA', ac2: '#8B5CF6', hi: '#C4B5FD', rgb: '167,139,250' },
+  emerald: { label: 'Smeraldo', ac: '#34D399', ac2: '#10B981', hi: '#6EE7B7', rgb: '52,211,153' },
+  amber:   { label: 'Ambra',    ac: '#FBBF24', ac2: '#F59E0B', hi: '#FCD34D', rgb: '251,191,36' },
+  rose:    { label: 'Rosa',     ac: '#FB7185', ac2: '#F43F5E', hi: '#FDA4AF', rgb: '251,113,133' },
+};
+
+function chipStyle(color) {
+  return 'display:inline-flex;align-items:center;padding:4px 11px;border-radius:999px;font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.06em;color:' + color + ';background:' + color + '1a;border:1px solid ' + color + '55;';
+}
+function pillStyle(active, color) {
+  if (color) {
+    return 'padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s ease;user-select:none;' +
+      (active ? 'background:' + color + '22;border:1px solid ' + color + ';color:' + color + ';' : 'background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.12);color:#9a9ab5;');
+  }
+  return 'padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s ease;user-select:none;' +
+    (active
+      ? 'background:rgba(var(--ac-rgb,34,211,238),0.15);border:1px solid var(--ac,#22D3EE);color:var(--achi,#67E8F9);'
+      : 'background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.12);color:#9a9ab5;');
+}
+function escapeHtml(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function formatNoteBody(text, citeMap) {
+  if (!text) return '';
+  const katexReady = typeof window !== 'undefined' && window.katex;
+  const hljsReady = typeof window !== 'undefined' && window.hljs;
+  const stash = [];
+  const put = (html) => { stash.push(html); return '\u0000' + (stash.length - 1) + '\u0000'; };
+
+  let work = String(text).replace(/```(\w*)\n?([\s\S]*?)```/g, (m, lang, code) => {
+    let inner;
+    try {
+      inner = hljsReady ? (lang && window.hljs.getLanguage(lang) ? window.hljs.highlight(code, { language: lang }).value : window.hljs.highlightAuto(code).value) : escapeHtml(code);
+    } catch (e) { inner = escapeHtml(code); }
+    return put('<pre style="background:#0d0d16;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px 16px;overflow-x:auto;font-family:\'IBM Plex Mono\',monospace;font-size:12.5px;line-height:1.6;margin:8px 0;"><code class="hljs">' + inner + '</code></pre>');
+  });
+
+  work = work.replace(/\$\$([\s\S]+?)\$\$/g, (m, expr) => {
+    try {
+      return put(katexReady ? '<div style="overflow-x:auto;padding:6px 0;">' + window.katex.renderToString(expr.trim(), { throwOnError: false, displayMode: true }) + '</div>' : escapeHtml('$$' + expr + '$$'));
+    } catch (e) { return put(escapeHtml('$$' + expr + '$$')); }
+  });
+
+  work = work.replace(/\$([^\$\n]+?)\$/g, (m, expr) => {
+    try {
+      return put(katexReady ? window.katex.renderToString(expr.trim(), { throwOnError: false }) : escapeHtml('$' + expr + '$'));
+    } catch (e) { return put(escapeHtml('$' + expr + '$')); }
+  });
+
+  work = work.replace(/\[\[cite:([\w-]+)\]\]/g, (m, id) => {
+    const n = citeMap && citeMap[id];
+    return put(n ? '<span style="display:inline-flex;align-items:center;padding:1px 7px;border-radius:6px;background:rgba(var(--ac-rgb,34,211,238),0.15);color:var(--achi,#67E8F9);font-family:\'IBM Plex Mono\',monospace;font-size:11px;font-weight:600;">[' + n + ']</span>' : '');
+  });
+
+  let escaped = escapeHtml(work).replace(/\n/g, '<br>');
+  escaped = escaped.replace(/\u0000(\d+)\u0000/g, (m, i) => stash[Number(i)]);
+  return escaped;
+}
+
+function seedEntries() {
+  const now = Date.now();
+  const d = (days, h, m) => now - days * 86400000 - ((new Date(now).getHours() - h) * 0 ) + 0 - ((0)) - ( (days===0?0:0) ) - ( ( ( new Date(now).getHours()*60 + new Date(now).getMinutes() ) - (h*60+m) ) * 60000 );
+  return [
+    { id: 'seed1', ts: d(2, 10, 24), title: 'Prima sessione passthrough con il robot in vista', text: 'Configurato il passthrough del visore e allineato l\'overlay virtuale con il braccio del robot riabilitativo. Deriva iniziale dell\'ancora di ~3cm muovendosi attorno al dispositivo — da testare con più marker di tracking.', chapter: 'Ambiente AR', images: [], audio: null, links: [{ label: 'Documentazione Meta Passthrough API', url: 'https://developers.meta.com/horizon/documentation/unity/unity-passthrough/' }], starred: true },
+    { id: 'seed2', ts: d(2, 15, 47), title: 'Stream telemetria robot via WebSocket', text: 'Stabilito il collegamento dati: angoli dei giunti, letture dei sensori di forza e timestamp di sessione ora in streaming a 50Hz. Perdita pacchetti sotto lo 0,2% su rete locale. Prossimo passo: mappare le curve di forza sulla visualizzazione AR.', chapter: 'Dati Robot', images: [], audio: null, links: [], starred: false },
+    { id: 'seed3', ts: d(1, 9, 12), title: 'Incontro con il relatore — metriche cliniche', text: 'Concordato di concentrarsi su range di movimento e profili di resistenza come le due metriche chiave mostrate nel visore. La vista per il paziente resta minimale; quella per il clinico avrà la dashboard completa.', chapter: 'Riabilitazione', images: [], audio: null, links: [], starred: true },
+    { id: 'seed4', ts: d(0, 11, 5), title: 'Misurazione latenza: sensore → rendering visore', text: 'Latenza end-to-end misurata a 86ms in media (n=40 prove). Accettabile per il monitoraggio, al limite per indicazioni in tempo reale. Valutare predizione/smoothing sulle posizioni dei giunti.', chapter: 'Test e Risultati', images: [], audio: null, links: [], starred: false },
+  ];
+}
+
+class Component extends DCLogic {
+  state = {
+    entries: [],
+    view: 'overview',
+    isMobile: typeof window !== 'undefined' && window.innerWidth < 760,
+    showModal: false,
+    form: { title: '', text: '', chapter: 'Generale', images: [], audio: null, links: [], linkLabel: '', linkUrl: '' },
+    recording: false,
+    recSeconds: 0,
+    search: '',
+    chapterFilter: null,
+    starredOnly: false,
+    exportScope: 'all',
+    exportFormat: 'pdf',
+    lightboxSrc: null,
+    progress: 0,
+    editingId: null,
+    chat: [],
+    chatInput: '',
+    chatBusy: false,
+    theme: 'cyan',
+    tasks: [],
+    milestones: [],
+    sources: [],
+    taskInput: '',
+    taskChapter: 'Generale',
+    msTitle: '',
+    msDate: '',
+    msChapter: 'Generale',
+    sourceInput: '',
+    sourceBusy: false,
+    sourceError: '',
+    showManualSource: false,
+    manualTitle: '', manualAuthors: '', manualYear: '', manualContainer: '', manualUrl: '',
+    citeSelect: '',
+  };
+
+  componentDidMount() {
+    let entries;
+    try { entries = JSON.parse(localStorage.getItem(LS_KEY) || 'null'); } catch (e) { entries = null; }
+    if (!entries) { entries = seedEntries(); this.persist(entries); }
+    else {
+      let migrated = false;
+      const seedById = {};
+      seedEntries().forEach(se => { seedById[se.id] = se; });
+      entries = entries.map(e => {
+        let out = e;
+        if (seedById[e.id] && /[a-z]/.test(e.title) && e.title !== seedById[e.id].title) {
+          migrated = true;
+          out = Object.assign({}, out, { title: seedById[e.id].title, text: seedById[e.id].text, links: seedById[e.id].links });
+        }
+        if (CHAPTER_MIGRATION[out.chapter]) { migrated = true; out = Object.assign({}, out, { chapter: CHAPTER_MIGRATION[out.chapter] }); }
+        return out;
+      });
+      if (migrated) this.persist(entries);
+    }
+    let progress = 0;
+    try { progress = Math.max(0, Math.min(100, parseInt(localStorage.getItem('rj-progress-v1') || '0', 10) || 0)); } catch (e) {}
+    let theme = 'cyan';
+    try { const t = localStorage.getItem(THEME_KEY); if (t && THEMES[t]) theme = t; } catch (e) {}
+    let tasks = [];
+    try { tasks = JSON.parse(localStorage.getItem(TASKS_KEY) || '[]') || []; } catch (e) {}
+    let milestones = [];
+    try { milestones = JSON.parse(localStorage.getItem(MILESTONES_KEY) || '[]') || []; } catch (e) {}
+    let sources = [];
+    try { sources = JSON.parse(localStorage.getItem(SOURCES_KEY) || '[]') || []; } catch (e) {}
+    this.setState({ entries, progress, theme, tasks, milestones, sources });
+
+    this._onResize = () => this.setState({ isMobile: window.innerWidth < 760 });
+    window.addEventListener('resize', this._onResize);
+
+    // 3D model rotation loop
+    this._rot = { rx: -8, ry: -28 };
+    this._dragging = false;
+    this._last = null;
+    this._onMove = (e) => {
+      if (!this._dragging) return;
+      const p = e.touches ? e.touches[0] : e;
+      if (this._last) {
+        this._rot.ry += (p.clientX - this._last.x) * 0.5;
+        this._rot.rx -= (p.clientY - this._last.y) * 0.4;
+        this._rot.rx = Math.max(-60, Math.min(60, this._rot.rx));
+      }
+      this._last = { x: p.clientX, y: p.clientY };
+      if (e.touches) e.preventDefault();
+    };
+    this._onUp = () => { this._dragging = false; this._last = null; };
+    window.addEventListener('mousemove', this._onMove);
+    window.addEventListener('mouseup', this._onUp);
+    window.addEventListener('touchmove', this._onMove, { passive: false });
+    window.addEventListener('touchend', this._onUp);
+
+    // lightning
+    this._bolts = [];
+    this._nextStrike = performance.now() + 1500 + Math.random() * 4000;
+
+    const loop = () => {
+      if (!this._dragging && (this.props.autoRotate ?? true)) this._rot.ry += 0.25;
+      if (this._modelEl) this._modelEl.style.transform = 'rotateX(' + this._rot.rx + 'deg) rotateY(' + this._rot.ry + 'deg)';
+      this.tickLightning();
+      this._raf = requestAnimationFrame(loop);
+    };
+    this._raf = requestAnimationFrame(loop);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._onResize);
+    window.removeEventListener('mousemove', this._onMove);
+    window.removeEventListener('mouseup', this._onUp);
+    window.removeEventListener('touchmove', this._onMove);
+    window.removeEventListener('touchend', this._onUp);
+    cancelAnimationFrame(this._raf);
+    if (this._recTimer) clearInterval(this._recTimer);
+  }
+
+  spawnBolt(w, h) {
+    const makePath = (x, y, maxY, spread) => {
+      const pts = [[x, y]];
+      while (y < maxY) {
+        x += (Math.random() - 0.5) * spread;
+        y += 14 + Math.random() * 26;
+        pts.push([x, y]);
+      }
+      return pts;
+    };
+    const x0 = w * (0.08 + Math.random() * 0.84);
+    const main = makePath(x0, -10, h * (0.45 + Math.random() * 0.45), 46);
+    const branches = [];
+    for (let i = 2; i < main.length - 2; i++) {
+      if (Math.random() < 0.25) {
+        branches.push(makePath(main[i][0], main[i][1], main[i][1] + 40 + Math.random() * 90, 60));
+      }
+    }
+    this._bolts.push({ t0: performance.now(), main, branches, life: 320 + Math.random() * 180 });
+  }
+
+  tickLightning() {
+    const canvas = this._lightCanvas;
+    if (!canvas) return;
+    const now = performance.now();
+    if (now > this._nextStrike) {
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      if (w > 0) {
+        this.spawnBolt(w, h);
+        if (Math.random() < 0.35) this.spawnBolt(w, h); // occasional double strike
+      }
+      this._nextStrike = now + 3500 + Math.random() * 6500;
+    }
+    if (this._bolts.length === 0) {
+      if (this._canvasDirty) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this._canvasDirty = false;
+      }
+      return;
+    }
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, w, h);
+    this._canvasDirty = true;
+    this._bolts = this._bolts.filter(b => now - b.t0 < b.life);
+    this._bolts.forEach(b => {
+      const p = (now - b.t0) / b.life;
+      const alpha = Math.max(0, 1 - p) * (0.55 + 0.45 * Math.sin(p * 40));
+      // ambient flash
+      ctx.fillStyle = 'rgba(140,200,255,' + (alpha * 0.05).toFixed(3) + ')';
+      ctx.fillRect(0, 0, w, h);
+      const drawPath = (pts, width) => {
+        ctx.beginPath();
+        ctx.moveTo(pts[0][0], pts[0][1]);
+        for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+        ctx.strokeStyle = 'rgba(210,235,255,' + alpha.toFixed(3) + ')';
+        ctx.lineWidth = width;
+        ctx.shadowColor = 'rgba(34,211,238,' + (alpha * 0.9).toFixed(3) + ')';
+        ctx.shadowBlur = 16;
+        ctx.stroke();
+      };
+      drawPath(b.main, 2.2);
+      b.branches.forEach(br => drawPath(br, 1.2));
+    });
+    ctx.shadowBlur = 0;
+  }
+
+  persist(entries) {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(entries)); }
+    catch (e) { alert('Spazio esaurito — prova a rimuovere immagini o audio pesanti dalle note più vecchie.'); }
+  }
+  persistTasks(tasks) { try { localStorage.setItem(TASKS_KEY, JSON.stringify(tasks)); } catch (e) {} }
+  persistMilestones(ms) { try { localStorage.setItem(MILESTONES_KEY, JSON.stringify(ms)); } catch (e) {} }
+  persistSources(src) { try { localStorage.setItem(SOURCES_KEY, JSON.stringify(src)); } catch (e) {} }
+
+  setTheme(theme) {
+    this.setState({ theme });
+    try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+  }
+
+  // ---- kanban ----
+  addTask() {
+    const text = this.state.taskInput.trim();
+    if (!text) return;
+    const task = { id: 'k' + Date.now(), text, col: 'todo', chapter: this.state.taskChapter };
+    this.setState(s => { const tasks = [task].concat(s.tasks); this.persistTasks(tasks); return { tasks, taskInput: '' }; });
+  }
+  moveTask(id, dir) {
+    const order = ['todo', 'doing', 'done'];
+    this.setState(s => {
+      const tasks = s.tasks.map(t => {
+        if (t.id !== id) return t;
+        const idx = Math.max(0, Math.min(order.length - 1, order.indexOf(t.col) + dir));
+        return Object.assign({}, t, { col: order[idx] });
+      });
+      this.persistTasks(tasks);
+      return { tasks };
+    });
+  }
+  deleteTask(id) {
+    this.setState(s => { const tasks = s.tasks.filter(t => t.id !== id); this.persistTasks(tasks); return { tasks }; });
+  }
+
+  // ---- milestones ----
+  addMilestone() {
+    const title = this.state.msTitle.trim();
+    if (!title || !this.state.msDate) return;
+    const ms = { id: 'm' + Date.now(), title, chapter: this.state.msChapter, due: this.state.msDate, done: false };
+    this.setState(s => { const milestones = [ms].concat(s.milestones); this.persistMilestones(milestones); return { milestones, msTitle: '', msDate: '' }; });
+  }
+  toggleMilestone(id) {
+    this.setState(s => { const milestones = s.milestones.map(m => m.id === id ? Object.assign({}, m, { done: !m.done }) : m); this.persistMilestones(milestones); return { milestones }; });
+  }
+  deleteMilestone(id) {
+    this.setState(s => { const milestones = s.milestones.filter(m => m.id !== id); this.persistMilestones(milestones); return { milestones }; });
+  }
+
+  // ---- bibliography ----
+  async fetchSource() {
+    const raw = this.state.sourceInput.trim();
+    if (!raw || this.state.sourceBusy) return;
+    this.setState({ sourceBusy: true, sourceError: '' });
+    try {
+      const doiMatch = raw.match(/10\.\d{4,9}\/\S+/);
+      const doi = doiMatch ? doiMatch[0].replace(/[.,;]+$/, '') : raw;
+      const res = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi));
+      if (!res.ok) throw new Error('not found');
+      const data = await res.json();
+      const item = data.message;
+      const authors = (item.author || []).map(a => (a.given ? a.given[0] + '. ' : '') + (a.family || '')).filter(Boolean).join(', ');
+      const dateParts = (item['published-print'] || item['published-online'] || item.issued || item.created || {})['date-parts'];
+      const year = dateParts && dateParts[0] && dateParts[0][0] || '';
+      const source = {
+        id: 's' + Date.now(),
+        doi: item.DOI || doi,
+        title: (item.title && item.title[0]) || raw,
+        authors: authors || 'Autore sconosciuto',
+        year: year,
+        container: (item['container-title'] && item['container-title'][0]) || '',
+        abstract: (item.abstract || '').replace(/<[^>]+>/g, '').slice(0, 400),
+        url: item.URL || ('https://doi.org/' + (item.DOI || doi)),
+      };
+      this.setState(s => { const sources = [source].concat(s.sources); this.persistSources(sources); return { sources, sourceInput: '', sourceBusy: false }; });
+    } catch (e) {
+      this.setState({ sourceBusy: false, sourceError: 'Impossibile recuperare i dati automaticamente. Prova con "+ Manuale" qui accanto.' });
+    }
+  }
+  addManualSource() {
+    const s = this.state;
+    if (!s.manualTitle.trim()) return;
+    const source = {
+      id: 's' + Date.now(),
+      doi: '',
+      title: s.manualTitle.trim(),
+      authors: s.manualAuthors.trim() || 'Autore sconosciuto',
+      year: s.manualYear.trim(),
+      container: s.manualContainer.trim(),
+      abstract: '',
+      url: s.manualUrl.trim() ? (s.manualUrl.trim().match(/^https?:\/\//) ? s.manualUrl.trim() : 'https://' + s.manualUrl.trim()) : '',
+    };
+    this.setState(st => { const sources = [source].concat(st.sources); this.persistSources(sources); return { sources, manualTitle: '', manualAuthors: '', manualYear: '', manualContainer: '', manualUrl: '', showManualSource: false }; });
+  }
+  deleteSource(id) {
+    this.setState(s => { const sources = s.sources.filter(x => x.id !== id); this.persistSources(sources); return { sources }; });
+  }
+  buildIeeeList(sources) {
+    return sources.map((s, i) => {
+      const parts = [];
+      if (s.authors) parts.push(s.authors);
+      parts.push('"' + s.title + ',"');
+      if (s.container) parts.push(s.container);
+      if (s.year) parts.push(String(s.year) + '.');
+      else parts[parts.length - 1] += '.';
+      return '[' + (i + 1) + '] ' + parts.join(' ') + (s.url ? ' [Online]. Available: ' + s.url : '');
+    }).join('\n\n');
+  }
+  downloadIeee() {
+    const list = this.buildIeeeList(this.state.sources);
+    const blob = new Blob([list], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'bibliografia-ieee.txt';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+  insertCitation() {
+    const id = this.state.citeSelect || (this.state.sources[0] && this.state.sources[0].id);
+    if (!id) return;
+    const cur = this.state.form.text;
+    this.setForm({ text: (cur ? cur.replace(/\s+$/, '') + ' ' : '') + '[[cite:' + id + ']] ' });
+  }
+
+  // ---- backup ----
+  exportBackup() {
+    const s = this.state;
+    const data = { version: 1, exportedAt: new Date().toISOString(), entries: s.entries, progress: s.progress, theme: s.theme, tasks: s.tasks, milestones: s.milestones, sources: s.sources };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'backup-diario-ricerca-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+  importBackup(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (!Array.isArray(data.entries)) throw new Error('formato non valido');
+        if (!confirm('Importare questo backup? I dati attuali (note, board, milestone, fonti) verranno sovrascritti.')) return;
+        const entries = data.entries;
+        const tasks = Array.isArray(data.tasks) ? data.tasks : [];
+        const milestones = Array.isArray(data.milestones) ? data.milestones : [];
+        const sources = Array.isArray(data.sources) ? data.sources : [];
+        const progress = typeof data.progress === 'number' ? data.progress : 0;
+        const theme = THEMES[data.theme] ? data.theme : 'cyan';
+        this.persist(entries); this.persistTasks(tasks); this.persistMilestones(milestones); this.persistSources(sources);
+        try { localStorage.setItem('rj-progress-v1', String(progress)); localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+        this.setState({ entries, tasks, milestones, sources, progress, theme });
+        alert('Backup importato con successo.');
+      } catch (e) {
+        alert('File di backup non valido.');
+      }
+    };
+    reader.readAsText(file);
+  }
+  updateEntries(fn) {
+    this.setState(s => {
+      const entries = fn(s.entries.slice());
+      this.persist(entries);
+      return { entries };
+    });
+  }
+  setForm(patch) { this.setState(s => ({ form: Object.assign({}, s.form, patch) })); }
+
+  // ---- attachments ----
+  handleFiles(e) {
+    const files = Array.from(e.target.files || []);
+    e.target.value = '';
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (file.type.startsWith('image/')) {
+          const img = new Image();
+          img.onload = () => {
+            const max = 1100;
+            const scale = Math.min(1, max / Math.max(img.width, img.height));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            const src = canvas.toDataURL('image/jpeg', 0.82);
+            this.setForm({ images: this.state.form.images.concat([src]) });
+          };
+          img.src = reader.result;
+        } else {
+          if (reader.result.length > 4_000_000) { alert('"' + file.name + '" è troppo grande per essere salvato nel browser. Mantieni i video brevi (<3MB).'); return; }
+          this.setForm({ images: this.state.form.images.concat([reader.result]) });
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async toggleRecording() {
+    if (this.state.recording) {
+      this._recorder && this._recorder.stop();
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const rec = new MediaRecorder(stream);
+      this._recorder = rec;
+      this._recChunks = [];
+      rec.ondataavailable = ev => this._recChunks.push(ev.data);
+      rec.onstop = () => {
+        stream.getTracks().forEach(t => t.stop());
+        clearInterval(this._recTimer);
+        const blob = new Blob(this._recChunks, { type: rec.mimeType || 'audio/webm' });
+        const reader = new FileReader();
+        reader.onload = () => { this.setForm({ audio: reader.result }); this.setState({ recording: false, recSeconds: 0 }); };
+        reader.readAsDataURL(blob);
+      };
+      rec.start();
+      this.setState({ recording: true, recSeconds: 0 });
+      this._recTimer = setInterval(() => this.setState(s => ({ recSeconds: s.recSeconds + 1 })), 1000);
+    } catch (err) {
+      alert('Accesso al microfono negato o non disponibile.');
+    }
+  }
+
+  saveEntry() {
+    const f = this.state.form;
+    if (!f.title.trim()) return;
+    const editingId = this.state.editingId;
+    if (editingId) {
+      this.updateEntries(list => list.map(x => x.id === editingId ? Object.assign({}, x, { title: f.title.trim(), text: f.text.trim(), chapter: f.chapter, images: f.images, audio: f.audio, links: f.links }) : x));
+    } else {
+      const entry = { id: 'e' + Date.now(), ts: Date.now(), title: f.title.trim(), text: f.text.trim(), chapter: f.chapter, images: f.images, audio: f.audio, links: f.links, starred: false };
+      this.updateEntries(list => [entry].concat(list));
+    }
+    this.setState({ showModal: false, editingId: null, view: editingId ? this.state.view : 'journal', form: { title: '', text: '', chapter: 'Generale', images: [], audio: null, links: [], linkLabel: '', linkUrl: '' } });
+  }
+
+  openEdit(entry) {
+    this.setState({
+      showModal: true,
+      editingId: entry.id,
+      form: { title: entry.title, text: entry.text, chapter: entry.chapter, images: (entry.images || []).slice(), audio: entry.audio, links: (entry.links || []).slice(), linkLabel: '', linkUrl: '' },
+    });
+  }
+
+  buildAiContext() {
+    const s = this.state;
+    const notes = s.entries.slice().sort((a, b) => b.ts - a.ts).slice(0, 40).map(e => {
+      const d = new Date(e.ts).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+      return '- [' + d + '] (' + e.chapter + (e.starred ? ', preferita' : '') + ') ' + e.title + ': ' + (e.text || '').slice(0, 180);
+    }).join('\n');
+    return 'Ti chiami MARKUS e sei un assistente di ricerca integrato nel diario di tesi di Mattia Iollo. La tesi (triennale) è: "Realizzazione ambiente di realtà aumentata per estrazione dati da dispositivo robotico per riabilitazione medica" (Meta Quest 3 + robot riabilitativo). Avanzamento dichiarato: ' + s.progress + '%.\n\nNote del diario (dalla più recente):\n' + notes + '\n\nAiuta a organizzare le idee: riassumi, collega note, individua lacune, suggerisci prossimi passi e struttura dei capitoli. Rispondi in italiano, in modo conciso e concreto. Usa solo testo semplice, senza markdown.';
+  }
+
+  async sendChat(text) {
+    const msg = (text || this.state.chatInput).trim();
+    if (!msg || this.state.chatBusy) return;
+    if (!(window.claude && window.claude.complete)) return;
+    const chat = this.state.chat.concat([{ role: 'user', content: msg }]);
+    this.setState({ chat, chatInput: '', chatBusy: true });
+    try {
+      const reply = await window.claude.complete({
+        system: this.buildAiContext(),
+        messages: chat.map(m => ({ role: m.role, content: m.content })),
+        max_tokens: 1200,
+      });
+      this.setState({ chat: chat.concat([{ role: 'assistant', content: reply }]), chatBusy: false });
+    } catch (err) {
+      this.setState({ chat: chat.concat([{ role: 'assistant', content: 'Si è verificato un errore. Riprova tra qualche istante.' }]), chatBusy: false });
+    }
+  }
+
+  downloadDoc(entries) {
+    const esc = t => String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const groups = [];
+    const map = {};
+    entries.forEach(e => {
+      const label = new Date(e.ts).toLocaleDateString('it-IT', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+      if (!map[label]) { map[label] = { label, entries: [] }; groups.push(map[label]); }
+      map[label].entries.push(e);
+    });
+    let body = '';
+    groups.forEach(g => {
+      body += '<h2 style="font-size:13pt;border-bottom:1px solid #999;padding-bottom:4px;">' + esc(g.label) + '</h2>';
+      g.entries.forEach(e => {
+        const dt = new Date(e.ts).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', hour12: false });
+        body += '<h3 style="font-size:11.5pt;margin-bottom:2px;">' + dt + ' — ' + esc(e.title) + ' <span style="color:#888;font-size:9pt;">[' + esc(e.chapter) + (e.starred ? ' ★' : '') + ']</span></h3>';
+        if (e.text) body += '<p style="font-size:10.5pt;line-height:1.5;white-space:pre-wrap;">' + esc(e.text) + '</p>';
+        (e.images || []).forEach(src => { if (src.startsWith('data:image')) body += '<img src="' + src + '" width="300" style="margin:4px 8px 4px 0;">'; });
+        (e.links || []).forEach(l => { body += '<p style="font-size:9.5pt;color:#555;">↗ ' + esc(l.label) + ' — ' + esc(l.url) + '</p>'; });
+        if (e.audio) body += '<p style="font-size:9.5pt;color:#888;">[Nota audio allegata — disponibile nell\'app]</p>';
+      });
+    });
+    const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>Diario di Ricerca</title></head><body style="font-family:Calibri,sans-serif;">' +
+      '<p style="font-size:9pt;color:#888;letter-spacing:2px;">DIARIO DI RICERCA — ' + new Date().toLocaleDateString('it-IT', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase() + '</p>' +
+      '<h1 style="font-size:18pt;line-height:1.25;">Realizzazione ambiente di realtà aumentata per estrazione dati da dispositivo robotico per riabilitazione medica</h1>' +
+      '<p style="font-size:11pt;font-weight:bold;">Mattia Iollo — Tesi triennale</p>' +
+      '<p style="font-size:10pt;color:#666;">' + entries.length + ' note · generato dal diario di ricerca</p><hr>' + body + '</body></html>';
+    const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'diario-ricerca-mattia-iollo.doc';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+
+  // ---- decoration ----
+  decorate(entry, opts) {
+    opts = opts || {};
+    const ch = CHAPTERS.find(c => c.name === entry.chapter) || CHAPTERS[0];
+    const dt = new Date(entry.ts);
+    const nMedia = (entry.images || []).length + (entry.audio ? 1 : 0);
+    const isVideo = s => s.startsWith('data:video');
+    return {
+      id: entry.id,
+      title: entry.title,
+      text: entry.text,
+      bodyEl: entry.text ? React.createElement('div', { style: { fontSize: opts.printMode ? 13 : 14, color: opts.printMode ? '#3a3a48' : '#b8b8d0', lineHeight: 1.65 }, dangerouslySetInnerHTML: { __html: formatNoteBody(entry.text, this._citeMap || {}) } }) : null,
+      chapter: entry.chapter,
+      chipStyle: chipStyle(ch.color),
+      time: dt.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', hour12: false }),
+      dayShort: dt.toLocaleDateString('it-IT', { month: 'short', day: 'numeric' }),
+      starred: entry.starred,
+      starIcon: entry.starred ? '★' : '☆',
+      starMark: entry.starred ? ' ★' : '',
+      starStyle: 'cursor:pointer;font-size:17px;transition:transform 0.15s ease;user-select:none;color:' + (entry.starred ? '#fbbf24' : '#565672') + ';',
+      hasImages: (entry.images || []).length > 0,
+      images: (entry.images || []).filter(s => !isVideo(s)).map(src => ({ src, onOpen: () => this.setState({ lightboxSrc: src }) })),
+      audio: entry.audio,
+      hasLinks: (entry.links || []).length > 0,
+      links: entry.links || [],
+      metaLine: nMedia + ' allegat' + (nMedia === 1 ? 'o' : 'i') + ' · ' + (entry.links || []).length + ' link',
+      onEdit: (e) => { e.stopPropagation(); this.openEdit(entry); },
+      onStar: (e) => { e.stopPropagation(); this.updateEntries(list => list.map(x => x.id === entry.id ? Object.assign({}, x, { starred: !x.starred }) : x)); },
+      onDelete: (e) => { e.stopPropagation(); if (confirm('Eliminare "' + entry.title + '"?')) this.updateEntries(list => list.filter(x => x.id !== entry.id)); },
+    };
+  }
+
+  groupByDay(entries, printMode) {
+    const groups = [];
+    const map = {};
+    entries.forEach(e => {
+      const label = new Date(e.ts).toLocaleDateString('it-IT', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase();
+      if (!map[label]) { map[label] = { label, entries: [] }; groups.push(map[label]); }
+      map[label].entries.push(this.decorate(e, { printMode }));
+    });
+    return groups;
+  }
+
+  renderVals() {
+    const s = this.state;
+    const entries = s.entries.slice().sort((a, b) => b.ts - a.ts);
+    const setView = v => () => this.setState({ view: v });
+
+    const navDefs = [
+      { key: 'overview', label: 'Panoramica', num: '01' },
+      { key: 'journal', label: 'Diario', num: '02' },
+      { key: 'plan', label: 'Piano', num: '03' },
+      { key: 'review', label: 'Revisione', num: '04' },
+      { key: 'biblio', label: 'Bibliografia', num: '05' },
+      { key: 'export', label: 'Esporta', num: '06' },
+      { key: 'assistant', label: 'MARKUS', num: '07' },
+    ];
+    const navItems = navDefs.map(n => {
+      const active = s.view === n.key;
+      return {
+        label: n.label, num: n.num, onClick: setView(n.key),
+        style: 'display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s ease;user-select:none;' +
+          (active ? 'background:rgba(var(--ac-rgb,34,211,238),0.1);color:var(--achi,#67E8F9);border:1px solid rgba(var(--ac-rgb,34,211,238),0.3);' : 'color:#9a9ab5;border:1px solid transparent;'),
+        mobileStyle: 'padding:7px 9px;border-radius:10px;font-size:10.5px;font-weight:600;cursor:pointer;user-select:none;white-space:nowrap;' +
+          (active ? 'color:var(--achi,#67E8F9);background:rgba(var(--ac-rgb,34,211,238),0.1);' : 'color:#9a9ab5;'),
+      };
+    });
+    const chapterOptions = CHAPTERS.map(c => c.name);
+    const citeMap = {};
+    s.sources.forEach((src, i) => { citeMap[src.id] = i + 1; });
+    this._citeMap = citeMap;
+
+    // review filtering
+    const q = s.search.trim().toLowerCase();
+    const filtered = entries.filter(e => {
+      if (s.starredOnly && !e.starred) return false;
+      if (s.chapterFilter && e.chapter !== s.chapterFilter) return false;
+      if (q) {
+        const hay = (e.title + ' ' + e.text + ' ' + (e.links || []).map(l => l.label + ' ' + l.url).join(' ')).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    // export
+    const exportEntries = entries.filter(e => s.exportScope === 'starred' ? e.starred : true);
+
+    const days = new Set(entries.map(e => new Date(e.ts).toDateString()));
+    const media = entries.reduce((n, e) => n + (e.images || []).length + (e.audio ? 1 : 0), 0);
+
+    const f = s.form;
+    const canSave = f.title.trim().length > 0;
+
+    return {
+      // nav / layout
+      isMobile: s.isMobile, notMobile: !s.isMobile, navItems,
+      isOverview: s.view === 'overview', isJournal: s.view === 'journal', isReview: s.view === 'review', isExport: s.view === 'export', isAssistant: s.view === 'assistant', isPlan: s.view === 'plan', isBiblio: s.view === 'biblio',
+      goJournal: setView('journal'),
+      statEntries: entries.length, statDays: days.size, statMedia: media,
+      overviewChips: [{ label: 'META QUEST 3' }, { label: 'TELEMETRIA ROBOT' }, { label: 'RIABILITAZIONE MEDICA' }],
+      recentEntries: entries.slice(0, 3).map(e => this.decorate(e)),
+
+      // 3d model
+      modelRef: el => { this._modelEl = el; },
+      lightningRef: el => { this._lightCanvas = el; },
+      modelDown: e => { this._dragging = true; this._last = { x: e.clientX, y: e.clientY }; e.preventDefault(); },
+      modelTouch: e => { const t = e.touches[0]; this._dragging = true; this._last = { x: t.clientX, y: t.clientY }; },
+
+      // journal
+      hasEntries: entries.length > 0, noEntries: entries.length === 0,
+      dayGroups: this.groupByDay(entries),
+
+      // progress
+      progress: s.progress,
+      progressPct: s.progress + '%',
+      progressBarStyle: 'height:100%;width:' + s.progress + '%;border-radius:inherit;background:linear-gradient(90deg,var(--ac,#22D3EE),var(--ac2,#38BDF8));box-shadow:0 0 12px rgba(var(--ac-rgb,34,211,238),0.5);transition:width 0.3s ease;',
+      onProgress: e => {
+        const progress = Math.max(0, Math.min(100, parseInt(e.target.value, 10) || 0));
+        this.setState({ progress });
+        try { localStorage.setItem('rj-progress-v1', String(progress)); } catch (err) {}
+      },
+      themeSwatches: Object.keys(THEMES).map(key => {
+        const t = THEMES[key];
+        const active = s.theme === key;
+        return {
+          label: t.label,
+          onClick: () => this.setTheme(key),
+          style: 'width:22px;height:22px;border-radius:50%;cursor:pointer;background:' + t.ac + ';border:2px solid ' + (active ? '#ffffff' : 'transparent') + ';box-shadow:0 0 0 1px rgba(255,255,255,0.15)' + (active ? ',0 0 10px ' + t.ac + '99' : '') + ';transition:all 0.15s ease;',
+        };
+      }),
+
+      // assistant
+      aiUnavailable: !(typeof window !== 'undefined' && window.claude && window.claude.complete),
+      chatMessages: s.chat.map(m => ({
+        text: m.content,
+        style: m.role === 'user'
+          ? 'align-self:flex-end;max-width:80%;padding:12px 18px;border-radius:16px 16px 4px 16px;background:rgba(34,211,238,0.12);border:1px solid rgba(34,211,238,0.3);color:#e8e8f0;font-size:14px;line-height:1.6;white-space:pre-wrap;'
+          : 'align-self:flex-start;max-width:85%;padding:12px 18px;border-radius:16px 16px 16px 4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#d0d0e2;font-size:14px;line-height:1.65;white-space:pre-wrap;',
+      })),
+      chatBusy: s.chatBusy,
+      showSuggestions: s.chat.length === 0 && !s.chatBusy,
+      chatSuggestions: [
+        { label: 'Riassumi il lavoro di questa settimana', onClick: () => this.sendChat('Riassumi il lavoro di questa settimana in base alle mie note.') },
+        { label: 'Quali sono i prossimi passi?', onClick: () => this.sendChat('In base alle mie note e all\'avanzamento, quali sono i prossimi passi più importanti?') },
+        { label: 'Suggerisci una struttura dei capitoli', onClick: () => this.sendChat('Suggerisci una struttura dei capitoli per la mia tesi in base al materiale raccolto.') },
+        { label: 'Trova lacune nel materiale', onClick: () => this.sendChat('Guardando le mie note, quali argomenti o dati mancano ancora per completare la tesi?') },
+      ],
+      chatInput: s.chatInput,
+      onChatInput: e => this.setState({ chatInput: e.target.value }),
+      onChatKey: e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.sendChat(); } },
+      sendChat: () => this.sendChat(),
+      chatSendStyle: 'padding:13px 26px;border-radius:12px;border:none;font-weight:700;font-size:14px;transition:all 0.15s ease;' +
+        (s.chatInput.trim() && !s.chatBusy ? 'background:linear-gradient(135deg,var(--ac,#22D3EE),var(--ac2,#38BDF8));color:#04141a;cursor:pointer;box-shadow:0 0 20px rgba(var(--ac-rgb,34,211,238),0.3);' : 'background:rgba(255,255,255,0.06);color:#565672;cursor:not-allowed;'),
+
+      // modal
+      showModal: s.showModal,
+      modalTitle: s.editingId ? 'Modifica nota' : 'Nuova nota',
+      saveBtnLabel: s.editingId ? 'Salva modifiche' : 'Salva nota',
+      openModal: () => this.setState({ showModal: true, editingId: null, form: { title: '', text: '', chapter: 'Generale', images: [], audio: null, links: [], linkLabel: '', linkUrl: '' } }),
+      closeModal: () => { if (s.recording && this._recorder) this._recorder.stop(); this.setState({ showModal: false, editingId: null }); },
+      stopProp: e => e.stopPropagation(),
+      formTitle: f.title, onTitle: e => this.setForm({ title: e.target.value }),
+      formText: f.text, onText: e => this.setForm({ text: e.target.value }),
+      formChapterChips: CHAPTERS.map(c => ({ name: c.name, onClick: () => this.setForm({ chapter: c.name }), style: pillStyle(f.chapter === c.name, c.color) })),
+      onPickFiles: e => this.handleFiles(e),
+      hasDraftImages: f.images.length > 0,
+      draftImages: f.images.map((src, i) => ({ src, onRemove: () => this.setForm({ images: f.images.filter((_, j) => j !== i) }) })),
+      draftAudio: f.audio,
+      removeDraftAudio: () => this.setForm({ audio: null }),
+      recording: s.recording,
+      recLabel: s.recording ? '■ Ferma (' + Math.floor(s.recSeconds / 60) + ':' + String(s.recSeconds % 60).padStart(2, '0') + ')' : '🎙 Registra audio',
+      recBtnStyle: 'padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;user-select:none;transition:all 0.15s ease;' +
+        (s.recording ? 'border:1px solid #fb7185;background:rgba(251,113,133,0.12);color:#fb7185;animation:recBlink 1.2s ease-in-out infinite;' : 'border:1px dashed rgba(167,139,250,0.45);background:rgba(167,139,250,0.07);color:#c4b5fd;'),
+      toggleRecording: () => this.toggleRecording(),
+      formLinkLabel: f.linkLabel, onLinkLabel: e => this.setForm({ linkLabel: e.target.value }),
+      formLinkUrl: f.linkUrl, onLinkUrl: e => this.setForm({ linkUrl: e.target.value }),
+      addLink: () => {
+        if (!f.linkUrl.trim()) return;
+        const url = f.linkUrl.trim().match(/^https?:\/\//) ? f.linkUrl.trim() : 'https://' + f.linkUrl.trim();
+        this.setForm({ links: f.links.concat([{ label: f.linkLabel.trim() || url.replace(/^https?:\/\//, '').slice(0, 40), url }]), linkLabel: '', linkUrl: '' });
+      },
+      hasDraftLinks: f.links.length > 0,
+      draftLinks: f.links.map((l, i) => ({ label: l.label, url: l.url, onRemove: () => this.setForm({ links: f.links.filter((_, j) => j !== i) }) })),
+      saveEntry: () => this.saveEntry(),
+      saveBtnStyle: 'padding:12px 26px;border-radius:12px;border:none;font-weight:700;font-size:14px;transition:all 0.15s ease;' +
+        (canSave ? 'background:linear-gradient(135deg,var(--ac,#22D3EE),var(--ac2,#38BDF8));color:#04141a;cursor:pointer;box-shadow:0 0 20px rgba(var(--ac-rgb,34,211,238),0.3);' : 'background:rgba(255,255,255,0.06);color:#565672;cursor:not-allowed;'),
+      hasSourcesForCite: s.sources.length > 0,
+      citeOptions: s.sources.map((src, i) => ({ id: src.id, label: '[' + (i + 1) + '] ' + src.title.slice(0, 50) })),
+      citeSelect: s.citeSelect || (s.sources[0] && s.sources[0].id) || '',
+      onCiteSelect: e => this.setState({ citeSelect: e.target.value }),
+      insertCitation: () => this.insertCitation(),
+
+      // review
+      search: s.search, onSearch: e => this.setState({ search: e.target.value }),
+      starredOnly: s.starredOnly,
+      toggleStarredOnly: () => this.setState({ starredOnly: !s.starredOnly }),
+      starredChipStyle: pillStyle(s.starredOnly, '#fbbf24'),
+      chapterChips: [{ name: 'Tutti i capitoli', onClick: () => this.setState({ chapterFilter: null }), style: pillStyle(!s.chapterFilter) }]
+        .concat(CHAPTERS.map(c => ({ name: c.name, onClick: () => this.setState({ chapterFilter: s.chapterFilter === c.name ? null : c.name }), style: pillStyle(s.chapterFilter === c.name, c.color) }))),
+      filteredEntries: filtered.map(e => this.decorate(e)),
+      filteredCount: filtered.length,
+
+      // export
+      setScopeAll: () => this.setState({ exportScope: 'all' }),
+      setScopeStarred: () => this.setState({ exportScope: 'starred' }),
+      scopeAllStyle: pillStyle(s.exportScope === 'all'),
+      scopeStarredStyle: pillStyle(s.exportScope === 'starred', '#fbbf24'),
+      setFormatPdf: () => this.setState({ exportFormat: 'pdf' }),
+      setFormatDoc: () => this.setState({ exportFormat: 'doc' }),
+      formatPdfStyle: pillStyle(s.exportFormat === 'pdf'),
+      formatDocStyle: pillStyle(s.exportFormat === 'doc', '#a78bfa'),
+      exportBtnLabel: s.exportFormat === 'pdf' ? 'Stampa / Salva PDF' : 'Scarica .doc',
+      doExport: () => s.exportFormat === 'pdf' ? window.print() : this.downloadDoc(exportEntries),
+      exportGroups: this.groupByDay(exportEntries, true),
+      exportBackup: () => this.exportBackup(),
+      onImportBackup: e => { const file = e.target.files && e.target.files[0]; e.target.value = ''; if (file) this.importBackup(file); },
+      exportDate: new Date().toLocaleDateString('it-IT', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase(),
+      exportSubtitle: exportEntries.length + ' note · ' + (s.exportScope === 'starred' ? 'selezione preferite' : 'registro completo') + ' · generato dal diario di ricerca',
+      doPrint: () => window.print(),
+
+      // lightbox
+      lightboxSrc: s.lightboxSrc,
+      closeLightbox: () => this.setState({ lightboxSrc: null }),
+
+      // kanban / milestones (Piano)
+      chapterOptions,
+      taskInput: s.taskInput, onTaskInput: e => this.setState({ taskInput: e.target.value }),
+      onTaskKey: e => { if (e.key === 'Enter') this.addTask(); },
+      taskChapter: s.taskChapter, onTaskChapter: e => this.setState({ taskChapter: e.target.value }),
+      addTask: () => this.addTask(),
+      kanbanColumns: [
+        { key: 'todo', label: 'Da fare' },
+        { key: 'doing', label: 'In lavorazione / in attesa' },
+        { key: 'done', label: 'Completato' },
+      ].map((col, ci) => {
+        const colTasks = s.tasks.filter(t => t.col === col.key);
+        const dotColors = ['#9a9ab5', '#fbbf24', '#34d399'];
+        return {
+          label: col.label,
+          count: colTasks.length,
+          empty: colTasks.length === 0,
+          dotStyle: 'width:9px;height:9px;border-radius:50%;background:' + dotColors[ci] + ';',
+          tasks: colTasks.map(t => {
+            const ch = CHAPTERS.find(c => c.name === t.chapter) || CHAPTERS[0];
+            const canPrev = t.col !== 'todo', canNext = t.col !== 'done';
+            return {
+              id: t.id, text: t.text, chapter: t.chapter,
+              chipStyle: chipStyle(ch.color),
+              onPrev: () => canPrev && this.moveTask(t.id, -1),
+              onNext: () => canNext && this.moveTask(t.id, 1),
+              onDelete: () => this.deleteTask(t.id),
+              prevStyle: 'cursor:' + (canPrev ? 'pointer' : 'default') + ';padding:2px 8px;border-radius:6px;background:rgba(255,255,255,0.05);color:' + (canPrev ? '#e8e8f0' : '#3a3a48') + ';font-size:13px;',
+              nextStyle: 'cursor:' + (canNext ? 'pointer' : 'default') + ';padding:2px 8px;border-radius:6px;background:rgba(255,255,255,0.05);color:' + (canNext ? '#e8e8f0' : '#3a3a48') + ';font-size:13px;',
+            };
+          }),
+        };
+      }),
+      msTitle: s.msTitle, onMsTitle: e => this.setState({ msTitle: e.target.value }),
+      msDate: s.msDate, onMsDate: e => this.setState({ msDate: e.target.value }),
+      msChapter: s.msChapter, onMsChapter: e => this.setState({ msChapter: e.target.value }),
+      addMilestone: () => this.addMilestone(),
+      hasMilestones: s.milestones.length > 0, noMilestones: s.milestones.length === 0,
+      milestoneRows: s.milestones.slice().sort((a, b) => a.due < b.due ? -1 : 1).map(m => {
+        const ch = CHAPTERS.find(c => c.name === m.chapter) || CHAPTERS[0];
+        const dueDate = new Date(m.due + 'T00:00:00');
+        const daysLeft = Math.round((dueDate.getTime() - new Date().setHours(0, 0, 0, 0)) / 86400000);
+        const overdue = !m.done && daysLeft < 0;
+        let dueLabel;
+        if (m.done) dueLabel = 'Completata';
+        else if (daysLeft === 0) dueLabel = 'Scade oggi';
+        else if (daysLeft < 0) dueLabel = 'In ritardo di ' + Math.abs(daysLeft) + ' giorni';
+        else dueLabel = 'Tra ' + daysLeft + ' giorni · ' + dueDate.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+        return {
+          title: m.title, chapter: m.chapter,
+          chipStyle: chipStyle(ch.color),
+          checkIcon: m.done ? '✓' : '',
+          checkStyle: 'width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;flex-shrink:0;' +
+            (m.done ? 'background:#34d399;color:#04140c;' : 'border:1.5px solid rgba(255,255,255,0.25);color:transparent;'),
+          titleStyle: 'font-weight:600;font-size:14.5px;' + (m.done ? 'color:#565672;text-decoration:line-through;' : 'color:#e8e8f0;'),
+          dueStyle: 'font-family:\'IBM Plex Mono\',monospace;font-size:11px;' + (overdue ? 'color:#fb7185;font-weight:700;' : 'color:#6b6b85;'),
+          rowStyle: 'display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid ' + (overdue ? 'rgba(251,113,133,0.35)' : 'rgba(255,255,255,0.07)') + ';',
+          onToggle: () => this.toggleMilestone(m.id),
+          onDelete: () => this.deleteMilestone(m.id),
+        };
+      }),
+
+      // bibliography (Fonti)
+      sourceInput: s.sourceInput, onSourceInput: e => this.setState({ sourceInput: e.target.value }),
+      onSourceKey: e => { if (e.key === 'Enter') this.fetchSource(); },
+      fetchSource: () => this.fetchSource(),
+      fetchBtnStyle: 'padding:12px 20px;border-radius:12px;border:none;font-weight:700;font-size:13px;cursor:pointer;' +
+        (s.sourceBusy ? 'background:rgba(255,255,255,0.06);color:#565672;' : 'background:linear-gradient(135deg,var(--ac,#22D3EE),var(--ac2,#38BDF8));color:#04141a;'),
+      fetchBtnLabel: s.sourceBusy ? 'Recupero…' : 'Recupera dati',
+      sourceError: s.sourceError,
+      showManualSource: s.showManualSource,
+      toggleManualSource: () => this.setState({ showManualSource: !s.showManualSource }),
+      manualTitle: s.manualTitle, onManualTitle: e => this.setState({ manualTitle: e.target.value }),
+      manualAuthors: s.manualAuthors, onManualAuthors: e => this.setState({ manualAuthors: e.target.value }),
+      manualYear: s.manualYear, onManualYear: e => this.setState({ manualYear: e.target.value }),
+      manualContainer: s.manualContainer, onManualContainer: e => this.setState({ manualContainer: e.target.value }),
+      manualUrl: s.manualUrl, onManualUrl: e => this.setState({ manualUrl: e.target.value }),
+      addManualSource: () => this.addManualSource(),
+      hasSources: s.sources.length > 0, noSources: s.sources.length === 0,
+      sourceCount: s.sources.length,
+      downloadIeee: () => this.downloadIeee(),
+      sourceRows: s.sources.map((src, i) => ({
+        num: i + 1,
+        title: src.title,
+        abstract: src.abstract,
+        metaLine: [src.authors, src.container, src.year].filter(Boolean).join(' · '),
+        url: src.url || '#',
+        urlLabel: src.doi ? ('doi.org/' + src.doi) : (src.url ? src.url.replace(/^https?:\/\//, '').slice(0, 50) : ''),
+        onDelete: () => this.deleteSource(src.id),
+      })),
+    };
+  }
+}
+</script>
+</body>
+</html>
